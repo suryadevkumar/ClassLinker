@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Sign Up - ClassLinker</title>
+    <link rel="stylesheet" href="student-signup.css">
+    <script src="student-signup.js" defer></script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>ClassLinker - Student Sign Up</h1>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="signup">
+        <div class="signup-form">
+            <h2>Student Sign Up</h2>
+            <form id="signupForm">
+                <div class="step" id="step1">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" class="input" required>
+                    <label for="dob">Date of Birth:</label>
+                    <input type="date" id="dob" name="dob" class="input" required>
+                    <label for="scholarid">Scholar ID:</label>
+                    <input type="text" id="scholar" name="scholar" class="input" required>
+                    <label for="mobile">Mobile Number:</label>
+                    <input type="text" id="mob" name="mob" class="input" required>
+                    <label for="mail">Email ID:</label>
+                    <input type="email" id="mail" name="mail" class="input" required>
+                    <label for="state">State:</label>
+                    <input type="text" id="state" name="state" class="input" required>
+                    <label for="country">country:</label>
+                    <input type="text" id="country" name="country" class="input" required>
+                    <label for="college">College:</label>
+                    <select id="college" name="college" class="input" required>
+                        <option value="">Select College</option>
+                        <option value="College1">College 1</option>
+                        <option value="College2">College 2</option>
+                        <option value="College3">College 3</option>
+                    </select>
+                    <label for="department">Department:</label>
+                    <select id="department" name="department" class="input" required>
+                        <option value="">Select Department</option>
+                    </select>
+                    <label for="course">Course:</label>
+                    <select id="course" name="course" class="input" required>
+                        <option value="">Select Course</option>
+                    </select>
+                    <label for="semester">Semester:</label>
+                    <select id="sem" name="sem" class="input" required>
+                        <option value="">Select Semester</option>
+                    </select>
+                    <button type="button" onclick="nextStep()">Next</button>
+                </div>
+
+                <div class="step" id="step2" style="display:none;">
+                    <lebel for="photo">Passport Size Photo:</lebel>
+                    <input required type="file" id="photo" name="photo" accept="image/*" class="input" title="Upload Profile Picture">
+                    <lebel for="AdmissionProof">Admission Receipt:</lebel>
+                    <input required type="file" id="Receipt" name="Receipt" accept="image/*" class="input" title="Upload Admission Receipt">
+                    <button type="button" onclick="nextStep()">Next</button>
+                    <button type="button" onclick="prevStep()">Previous</button>
+                </div>
+
+                <div class="step" id="step3" style="display:none;">
+                    <label for="password">Create Password:</label>
+                    <input type="password" id="pass" name="pass" class="input" required>
+                    <label for="CNFpassword">Confirm Password:</label>
+                    <input type="password" id="CNFpass" name="CNFpass" class="input" required>
+                    <button type="submit">Sign Up</button>
+                    <button type="button" onclick="prevStep()">Previous</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 ClassLinker. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

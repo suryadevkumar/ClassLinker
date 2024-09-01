@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClassLinker - Attendance Sheet</title>
+    <link rel="stylesheet" href="attendance.css">
+</head>
+<body>
+    <header>
+        <h1>ClassLinker</h1>
+    </header>
+    <section class="container">
+        <div class="student-info-left">
+            <div class="student-info">
+                <img src="icon/classlinker.png" alt="Student Picture">
+                <h2>Student Information</h2>
+                <p>Scholar ID: <span id="student-id">6969696969</span></p>
+                <p>Name: <span id="student-name">Sunny</span></p>
+                <div class="attendance-percentage">
+                    <p>Percentage = <span id="attendance-percentage">75%</span></p>
+                    <div class="percentage-circle green">
+                        <p>Present</p>
+                        <p>75/100</p>
+                        <p>Total days</p>
+                    </div>
+                </div>
+                <div class="status-button">
+                    <button id="present-button">Present</button>
+                    <button id="absent-button">Absent</absent>
+                </div>
+            </div>
+        </div>
+        <div class="attendance-right">
+            <table class="attendance-table">
+                <thead>
+                    <tr>
+                        <th>Scholar ID</th>
+                        <th>Name</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>6969696969</td>
+                        <td>Sunny</td>
+                        <td class="status present">Present</td>
+                    </tr>
+                    <tr>
+                        <td>2320403240</td>
+                        <td>Mahi</td>
+                        <td class="status absent">Absent</td>
+                    </tr>
+                    <!-- Add more rows as needed -->
+                </tbody>
+            </table>
+        </div>
+    </section>
+    <footer>
+        <p>&copy; 2024 ClassLinker. All rights reserved.</p>
+    </footer>
+    <script src="js/attendance.js"></script>
+</body>
+</html>
