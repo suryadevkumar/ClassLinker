@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Dashboard</title>
+    <link rel="stylesheet" href="notes-Student.css">
+</head>
+<body>
+    <header>
+        <h1>Class Linker - Student Dashboard</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a> </li>
+                <li><a href="#">My Profile</a></li>
+                <li><a href="#">Student Info</a></li>
+                <li><a href="Notes.html">Notes</a></li>
+                <li><a href="#">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h2>Get Notes</h2>
+        <form>
+            <label class="NotesTitle" for="materialTitle">Notes Title:</label>
+            <input type="text" id="materialTitle" name="materialTitle" required>
+
+            <label class="NoteSubject" for="materialSubject">Notes Subject:</label>
+            <input type="text" id="materialSubject" name="materialSubject" required>
+
+            <button type="submit">Fetch Notes</button>
+        </form>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 College Management System</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

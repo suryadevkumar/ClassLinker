@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Dashboard</title>
+    <link rel="stylesheet" href="notes.css">
+</head>
+<body>
+    <header>
+        <h1>Class Linker - Teacher Dashboard</h1>
+        <nav>
+            <ul> 
+                <li><a href="index.html">Home</a> </li>
+                <li><a href="#">My Profile</a></li>
+                <li><a href="#">Notes</a></li>
+                <li><a href="#">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h2>Upload Notes</h2>
+        <form>
+            <label for="materialTitle">Notes Title:</label>
+            <input type="text" id="materialTitle" name="materialTitle" required>
+
+            <label for="materialSubject">Notes Subject:</label>
+            <input type="text" id="materialSubject" name="materialSubject" required>
+
+            <label for="materialFile">Upload Notes:</label>
+            <input type="file" id="materialFile" name="materialFile" required>
+
+            <button type="submit">Upload Notes</button>
+        </form>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 College Management System</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

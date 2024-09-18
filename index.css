@@ -10,6 +10,7 @@ body {
     flex-direction: column;
     min-height: 100vh;
     background: linear-gradient(to right, #ffecd2, #fcb69f);
+    /* background-image: url(icon/back1.png); */
 }
 
 header {
@@ -128,6 +129,7 @@ footer {
     text-align: center;
     line-height: 1.5;
 }
+
 .word {
     display: block;
     position: relative;
@@ -140,8 +142,9 @@ footer {
     width: 100%;
     height: 100%;
     clip-path: inset(0 100% 0 0);
-    animation: revealText 3s ease-in-out infinite;
+    animation: revealText 3s ease-in-out 2;
 }
+
 .word:nth-child(1)::before {
     color: #ff9800;
 }

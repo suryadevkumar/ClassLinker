@@ -52,6 +52,7 @@ section {
 .bound{
     display: flex;
     flex-direction: row;
+
 }
 
 .profile-info {
