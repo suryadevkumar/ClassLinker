@@ -85,6 +85,43 @@ section {
     margin-bottom: 20px;
 }
 
+.otp {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.otp input{
+    display: block;
+    width: 73%;
+    padding: 0.5rem;
+    border: 1 px solid;
+    border-radius: 5px;
+    margin-right: 2%;
+    float: left;
+}
+
+.popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #28a745;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s, visibility 0.5s;
+}
+
+.popup.show {
+    opacity: 1;
+    visibility: visible;
+}
+
 .signup-form button {
     width: 100%;
     margin-top: 20px;

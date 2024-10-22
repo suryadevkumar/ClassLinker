@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Institute Login - ClassLinker</title>
+    <link rel="stylesheet" href="student-login.css">
+    <script src="institute-login.js" defer></script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>ClassLinker - Institute Login</h1>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section id="login">
+        <div class="container">
+            <div class="login-form">
+                <h2>Institute Login</h2>
+                <form>
+                    <div id="step1">
+                        <div class="login_input">
+                            <img src="icon/mail.png" width="22px">
+                            <input required type="email" placeholder="Email" class="input" id="insMail">
+                        </div><br>
+                        <div class="login_input">
+                            <img src="icon/lock.png" width="23px">
+                            <input required type="password" placeholder="Your Password" class="input" id="pass">
+                        </div><br>
+                        <a href="admin-login.html" style="color: blue; text-decoration: none;">Admin Login</a>
+                        <a href="institute-forget-pass.html" style="float: inline-end;margin-right: 5px; color: blue; text-decoration: none;">Forgot password?</a>
+                        <br><br>
+                        <button type="submit" style="color: white;" onclick="sendOTP(event)">Send OTP</button><br><br>
+                        Don't have an account? <a href="institute-signup.html" style="color: blue; text-decoration: none;">Sign up</a>
+                    </div>
+                    <div id="step2" style="display: none;">
+                        <div id="otpPopup" class="popup"></div>
+                        <label>Enter Your OTP:</label><br><br>
+                        <div class="login_input">
+                            <img src="icon/otp.png" width="23px">
+                            <input required type="text" placeholder="Your OTP" class="input" id="insOTP">
+                        </div><br>
+                        <button type="submit" style="color: white;" onclick="instituteLogin(event)">Log In</button><br><br>
+                        <a href="admin-login.html" style="color: blue; text-decoration: none;">Admin Login</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 ClassLinker. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

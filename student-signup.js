@@ -51,19 +51,110 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function nextStep() {
-    const currentStep = document.querySelector('.step:not([style*="display: none"])');
-    const nextStep = currentStep.nextElementSibling;
-    if (nextStep) {
-        currentStep.style.display = 'none';
-        nextStep.style.display = 'block';
-    }
+    const stdMail=document.getElementById('stdMail').value; 
+
+    document.getElementById('step1').style.display='none';
+    document.getElementById('step2').style.display='block';
+    document.getElementById('stdMailverify').value=`${stdMail}`
 }
 
 function prevStep() {
-    const currentStep = document.querySelector('.step:not([style*="display: none"])');
-    const prevStep = currentStep.previousElementSibling;
-    if (prevStep) {
-        currentStep.style.display = 'none';
-        prevStep.style.display = 'block';
+    document.getElementById('step2').style.display='none';
+    document.getElementById('step1').style.display='block';
+}
+
+//function to preview student pic
+function previewImage() {
+    const file = document.getElementById('photo').files[0];
+    const preview = document.getElementById('preview');
+    
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            preview.src = e.target.result;
+            preview.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
     }
+}
+
+//function for password validation
+function passValidate() {
+    const pass = document.getElementById('pass').value;
+    const CNFpass = document.getElementById('CNFpass').value;
+    const passWarning = document.getElementById('passWarning');
+
+    if (CNFpass) {
+        if (pass === CNFpass) {
+            passWarning.innerHTML = '* Password match.<br><br>';
+            passWarning.style.color = 'green';
+        } else {
+            passWarning.innerHTML = '* Passwords do not match.<br><br>';
+            passWarning.style.color = 'red';
+        }
+    } 
+    else {
+        passWarning.innerHTML = '';
+    }
+}
+
+//function to send OTP on student email
+function sendOTP(){
+    document.getElementById('otp1').style.display = 'block';
+    const send=document.getElementById('send');
+    send.disabled=true;
+    const email = document.getElementById('stdMail').value;
+
+    fetch('/sendStdEmail', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email })
+    })
+    .then(response => response.text())
+    .then(data =>{
+        const otpSent=document.getElementById('otpSent');
+        otpSent.style.display='block';
+        otpSent.style.color='green';
+        otpSent.innerHTML=`${data} <br>`;
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+
+    let count=59;
+    send.innerHTML=`Resend in ${count}`;
+    const timer=setInterval(() => {
+        count--;
+        send.innerHTML = `Resend in 0:${count < 10 ? '0' : ''}${count}`;
+        if (count <= 0) {
+            clearInterval(timer);
+            if((document.getElementById('verify').innerText)!='Verified')
+            send.disabled = false;
+            send.innerHTML = 'Resend';
+        }
+    }, 1000);
+}
+
+function studentSignup(){
+    const name=document.getElementById('stdName').value;
+    const dob=document.getElementById('stdDob').value;
+    const scholarId=document.getElementById('scholarId').value;
+    const mobile=document.getElementById('stdMob').value;
+    const mail=document.getElementById('stdMail').value;
+    const pass=document.getElementById('pass').value;
+    console.log(name);
+    console.log(dob);
+    console.log(scholarId);
+    console.log(mobile);
+    console.log(mail);
+    fetch('/studentSignup',{
+        method:'POST',
+        headers: {'content-type':'application/json'},
+        body:JSON.stringify({name,dob,scholarId,mobile,mail,pass})
+    })
+    .then(response=>response.text())
+    .then(data=>alert(data))
+    .catch(err=>console.error(err))
 }

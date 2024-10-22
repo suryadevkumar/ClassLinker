@@ -26,20 +26,16 @@
             <h2>Student Sign Up</h2>
             <form id="signupForm">
                 <div class="step" id="step1">
-                    <label for="name">Name:</label>
-                    <input type="text" id="name" name="name" class="input" required>
-                    <label for="dob">Date of Birth:</label>
-                    <input type="date" id="dob" name="dob" class="input" required>
-                    <label for="scholarid">Scholar ID:</label>
-                    <input type="text" id="scholar" name="scholar" class="input" required>
-                    <label for="mobile">Mobile Number:</label>
-                    <input type="text" id="mob" name="mob" class="input" required>
+                    <label for="stdName">Name:</label>
+                    <input type="text" id="stdName" name="stdName" class="input" required>
+                    <label for="stdDob">Date of Birth:</label>
+                    <input type="date" id="stdDob" name="stdDob" class="input" required>
+                    <label for="scholarId">Scholar ID:</label>
+                    <input type="text" id="scholarId" name="scholarId" class="input" required>
+                    <label for="stdMob">Mobile Number:</label>
+                    <input type="text" id="stdMob" name="stdMob" class="input" required>
                     <label for="mail">Email ID:</label>
-                    <input type="email" id="mail" name="mail" class="input" required>
-                    <label for="state">State:</label>
-                    <input type="text" id="state" name="state" class="input" required>
-                    <label for="country">country:</label>
-                    <input type="text" id="country" name="country" class="input" required>
+                    <input type="stdMail" id="stdMail" name="stdMail" class="input" required>
                     <label for="college">College:</label>
                     <select id="college" name="college" class="input" required>
                         <option value="">Select College</option>
@@ -59,24 +55,31 @@
                     <select id="sem" name="sem" class="input" required>
                         <option value="">Select Semester</option>
                     </select>
-                    <button type="button" onclick="nextStep()">Next</button>
+                    <button type="submit" onclick="nextStep()">Next</button>
                 </div>
 
                 <div class="step" id="step2" style="display:none;">
+                    <img id="preview" style="max-width: 200px; display: none;"><br>
                     <lebel for="photo">Passport Size Photo:</lebel>
-                    <input required type="file" id="photo" name="photo" accept="image/*" class="input" title="Upload Profile Picture">
+                    <input required type="file" id="photo" name="photo" accept="image/*" class="input" title="Upload Profile Picture" onchange="previewImage()">
                     <lebel for="AdmissionProof">Admission Receipt:</lebel>
                     <input required type="file" id="Receipt" name="Receipt" accept="image/*" class="input" title="Upload Admission Receipt">
-                    <button type="button" onclick="nextStep()">Next</button>
-                    <button type="button" onclick="prevStep()">Previous</button>
-                </div>
-
-                <div class="step" id="step3" style="display:none;">
                     <label for="password">Create Password:</label>
-                    <input type="password" id="pass" name="pass" class="input" required>
+                    <input type="password" id="pass" name="pass" class="input" placeholder="Password" oninput="passValidate()" required>
                     <label for="CNFpassword">Confirm Password:</label>
-                    <input type="password" id="CNFpass" name="CNFpass" class="input" required>
-                    <button type="submit">Sign Up</button>
+                    <input type="password" id="CNFpass" name="CNFpass" class="input" placeholder="Confirm Password" oninput="passValidate()" required>
+                    <span id="passWarning"></span>
+                    <label for="mailVerify">Verify your mail:</label>
+                    <div class="otp">
+                        <input type="text" id="stdMailverify" readonly>
+                        <button type="button" style="width: 25%; margin-top: 0;" id="send" onclick="sendOTP()">Send OTP</button>
+                    </div>
+                    <div class="otp" id="otp1" style="display: none;">
+                        <span id="otpSent" style="display: none;"></span>
+                        <input type="text" id="stdOTP" name="stdOTP">
+                        <button type="button" id="verify" onclick="validateStdOTP()" style="width: 25%; margin-top: 0;">Verify</button>
+                    </div>
+                    <button type="button" onclick="studentSignup()">Sign Up</button>
                     <button type="button" onclick="prevStep()">Previous</button>
                 </div>
             </form>

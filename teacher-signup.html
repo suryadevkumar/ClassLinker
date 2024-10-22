@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Sign Up - ClassLinker</title>
+    <link rel="stylesheet" href="student-signup.css">
+    <script src="teacher-signup.js" defer></script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>ClassLinker - Teacher Sign Up</h1>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="signup">
+        <div class="signup-form">
+            <h2>Teacher Sign Up</h2>
+            <form id="signupForm">
+                <div class="step" id="step1">
+                    <label for="tchName">Name:</label>
+                    <input type="text" id="tchName" name="tchName" class="input" required>
+                    <label for="tchDob">Date of Birth:</label>
+                    <input type="date" id="tchDob" name="tchDob" class="input" required>
+                    <label for="tchId">Teacher ID:</label>
+                    <input type="text" id="tchId" name="tchId" class="input" required>
+                    <label for="tchMob">Mobile Number:</label>
+                    <input type="text" id="tchMob" name="tchMob" class="input" required>
+                    <label for="tchMail">Email ID:</label>
+                    <input type="mail" id="tchMail" name="tchMail" class="input" required>
+                    <label for="college">College:</label>
+                    <select id="college" name="college" class="input" required>
+                        <option value="">Select College</option>
+                        <option value="College1">College 1</option>
+                        <option value="College2">College 2</option>
+                        <option value="College3">College 3</option>
+                    </select>
+                    <button type="button" onclick="nextStep()">Next</button>
+                </div>
+
+                <div class="step" id="step2" style="display:none;">
+                    <img id="preview" style="max-width: 200px; display: none;"><br>
+                    <lebel for="photo">Passport Size Photo:</lebel>
+                    <input required type="file" id="photo" name="photo" accept="image/*" class="input" title="Upload Profile Picture" onchange="previewImage()">
+                    <label for="password">Create Password:</label>
+                    <input type="password" id="pass" name="pass" class="input" placeholder="Password" oninput="passValidate()" required>
+                    <label for="CNFpassword">Confirm Password:</label>
+                    <input type="password" id="CNFpass" name="CNFpass" class="input" placeholder="Confirm Password" oninput="passValidate()" required>
+                    <span id="passWarning"></span>
+                    <label for="mailVerify">Verify your mail:</label>
+                    <div class="otp">
+                        <input type="text" id="tchMailverify" readonly>
+                        <button type="button" style="width: 25%; margin-top: 0;" id="send" onclick="sendOTP()">Send OTP</button>
+                    </div>
+                    <div class="otp" id="otp1" style="display: none;">
+                        <span id="otpSent" style="display: none;"></span>
+                        <input type="text" id="tchOTP" name="tchOTP">
+                        <button type="button" id="verify" onclick="validateTchOTP()" style="width: 25%; margin-top: 0;">Verify</button>
+                    </div>
+                    <button type="button" onclick="tchSignup()">Sign Up</button>
+                    <button type="button" onclick="prevStep()">Previous</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 ClassLinker. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
