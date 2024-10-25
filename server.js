@@ -72,8 +72,13 @@ app.post('/checkEmailUsed',async(req,res)=>{
 })
 
 //send OTP to institute email
+let instituteMail='';
 app.post('/sendInsEmail', (req, res) => {
-    const { email } = req.body;
+    let { email } = req.body;
+    if (!email) {
+        email = instituteMail;
+    }
+    instituteMail=email;
     otp1=generateOTP();
     const mailOptions = {
         from: 'suryadevkumar786786@gmail.com',
@@ -145,7 +150,7 @@ app.post('/instituteSignup',upload.single('photo'), async(req,res)=>{
     try{
         connection=await oracledb.getConnection(dbConfig);
         connection.execute(
-            `INSERT INTO INSTITUTE (ins_id, ins_name, ins_code,ins_address, ins_email, ins_mobile, ins_pass, ad_name, ad_mob, ad_email, ad_pic)
+            `INSERT INTO INSTITUTE (ins_id, ins_name, ins_code,ins_address, ins_email, ins_mobile, ins_pass, ad_name, ad_mobile, ad_email, ad_pic)
             VALUES (ins_id_seq.NEXTVAL, :insName, :insCode, :insAddress, :insMail, :insMob, :hashPass, :adName, :adMob, :adMail, :adminPic)`,
         {insName,insCode, insAddress, insMail, insMob, hashPass, adName, adMob, adMail, adminPic: { val: adminPic, type: oracledb.BLOB }},
         {autoCommit: true})
@@ -170,8 +175,10 @@ app.post('/instituteSignup',upload.single('photo'), async(req,res)=>{
 })
 
 //admin login function
+let adminMail='';
 app.post('/adminLogin',async (req,res)=>{
     const {adMail, pass}=req.body;
+    adminMail=adMail;
     let connection;
     try{
         connection=await oracledb.getConnection(dbConfig);
@@ -233,6 +240,133 @@ app.post('/insOTPLogin',async (req,res)=>{
             }
         }
     }
+})
+
+//function for institute login data fetch
+app.get('/insLogin',async (req,res)=>{
+    let connection;
+    try{
+        connection=await oracledb.getConnection(dbConfig);
+        const result=await connection.execute(`
+            SELECT ins_name, ins_code, ins_email, ins_mobile, ad_email FROM institute WHERE ins_email=:email`,
+            {email: instituteMail});
+            console.log(result.rows[0]);
+            adminMail=result.rows[0][4];
+            console.log(result.rows[0][4]);
+            res.json(result.rows[0]);
+    }
+    catch(err){
+        console.error(err);
+    }
+    finally{
+        if(connection)
+        {
+            try{
+                connection.close();
+            }
+            catch(err){
+                console.error(err);
+            }
+        }
+    }
+
+})
+
+//function for admin credentials data fetch
+app.get('/fetchAdminCredentials',async (req,res)=>{
+    let connection;
+    try{
+        connection=await oracledb.getConnection(dbConfig);
+        const result=await connection.execute(`
+            SELECT ad_name, ad_email, ad_mobile FROM institute WHERE ad_email=:email`,
+            {email: adminMail});
+        console.log(result.rows[0]);
+        res.json(result.rows[0]);
+    }
+    catch(err){
+        console.error(err);
+    }
+    finally{
+        if(connection)
+        {
+            try{
+                connection.close();
+            }
+            catch(err){
+                console.error(err);
+            }
+        }
+    }
+
+})
+
+//save admin credentials into database
+app.post('/changeAdminCredentials', async (req, res) => {
+    const { adName, adMob, adEmail} = req.body;
+    let updateFields = [];
+    if (adName) {
+        updateFields.push(`ad_name = '${adName}'`);
+    }
+    if (adMob) {
+        updateFields.push(`ad_mobile = '${adMob}'`);
+    }
+    if (adEmail) {
+        updateFields.push(`ad_email = '${adEmail}'`);
+    }
+    const updateQuery = `
+        UPDATE institute 
+        SET ${updateFields.join(', ')} 
+        WHERE ins_email = '${instituteMail}'
+    `;
+    
+    let connection;
+    try {
+        connection = await oracledb.getConnection(dbConfig);
+        await connection.execute(
+            updateQuery,{},
+            { autoCommit: true }
+        );
+        res.send('Admin credentials updated successfully');
+    } catch (err) {
+        console.error('Error during update:', err);
+        res.status(500).send('Error updating admin credentials');
+    } finally {
+        if (connection) {
+            try {
+                await connection.close();
+            } catch (err) {
+                console.error('Error closing connection:', err);
+            }
+        }
+    }
+});
+
+//function for admin login data fetch
+app.get('/adminDetailsFetch',async (req,res)=>{
+    let connection;
+    try{
+        connection=await oracledb.getConnection(dbConfig);
+        const result=await connection.execute(`
+            SELECT ad_name, ins_name, ad_email, ad_mobile FROM institute WHERE ad_email=:email`,
+            {email: adminMail});
+            console.log(result.rows[0]);
+            res.json(result.rows[0]);
+    }
+    catch(err){
+        console.error(err);
+    }
+    finally{
+        if(connection)
+        {
+            try{
+                connection.close();
+            }
+            catch(err){
+                console.error(err);
+            }
+        }
+    }
+
 })
 
 //student signup function

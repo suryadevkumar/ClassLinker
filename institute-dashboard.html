@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Institute Dashboard - ClassLinker</title>
     <link rel="stylesheet" href="institute-dashboard.css">
+    <script src="institute-dashboard.js" defer></script>
 </head>
 <body>
     <header class="head">
@@ -12,23 +13,23 @@
         <nav>
             <ul>
                 <li><a href="index.html">Home</a></li>
-                <li><a href="#logout">Log Out</a></li>
+                <li><a href="institute-login.html">Log Out</a></li>
             </ul>
         </nav>
     </header>
     <div class="bound">
         <section class="profile-info">
             <img src="https://th.bing.com/th/id/OIP.sQdnD9IXz89MFCyQayuVVgHaHa?pid=ImgDet&w=192&h=192&c=7&dpr=1.5" alt="Institute Picture" class="profile-pic">
-            <h2>Maulana Azad National Institute of Technology, Bhopal</h2><br>
-            <p><b>Institute ID:</b> IN123456</p><br>
-            <p><b>Email:</b> institute@manit.ac.in</p><br>
-            <p><b>Mobile No:</b> +91 764766878</p><br>
+            <h2><span id="insName"></span></h2><br>
+            <p><b>Institute ID: </b><span id="insCode"></span></p><br>
+            <p><b>Email: </b><span id="insMail"></span></p><br>
+            <p><b>Mobile No: </b><span id="insMob"></span></p><br>
         </section>
 
         <div class="menu-box">
             <div class="menu">
                 <img src="icon/adminCredentials.png" alt="admin_credentials.jpg">
-                <h2>Change Admin Credentials</h2>
+                <h2><a href="admin-credentials.html" style="text-decoration: none; color: black;">Change Admin Credentials</a></h2>
             </div>
             <div class="menu">
                 <img src="icon/changePass.png" alt="change_password.jpg">

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - ClassLinker</title>
     <link rel="stylesheet" href="admin-dashboard.css">
+    <script src="admin-dashboard.js" defer></script>
 </head>
 <body>
     <header class="head">
@@ -12,18 +13,17 @@
         <nav>
             <ul>
                 <li><a href="index.html">Home</a></li>
-                <li><a href="#chat">Log Out</a></li>
+                <li><a href="admin-login.html">Log Out</a></li>
             </ul>
         </nav>
     </header>
     <div class="bound">
         <section class="profile-info">
             <img src="https://th.bing.com/th/id/OIP.sQdnD9IXz89MFCyQayuVVgHaHa?pid=ImgDet&w=192&h=192&c=7&dpr=1.5" alt="Profile Picture" class="profile-pic">
-            <h2>DileepChand Patel</h2>
-            <p><b>Admin ID:</b> 123456</p>
-            <p><b>College Name:</b> Maulana Azad National Institute of Technology, Bhopal (MANIT Bhopal)</p>
-            <p><b>email id</b>:</b> dileepchand@gamil.com</p>
-            <p><b>Mobile no</b>:</b> +91 764766878</p>
+            <h2><span id="adName"></span></h2>
+            <p><b>College Name:</b> <span id="insName"></span> </p><br>
+            <p><b>Email id</b>:</b> <span id="adEmail"></span></p><br>
+            <p><b>Mobile no</b>:</b> <span id="adMob"></span></p>
         </section>
         <div class="menu-box">
             <div class="menu">
@@ -33,6 +33,14 @@
             <div class="menu">
                 <h2>Teacher</h2>
                 <img src="https://th.bing.com/th/id/OIP.qYNgLk5HAwC1iiSmdd8DnAHaHa?pid=ImgDet&w=208&h=208&c=7&dpr=1.5" height="65%" alt="notes.jpg">
+            </div>
+            <div class="menu">
+                <h2>Request</h2>
+                <img src="icon/request.png"  height="65%">
+            </div>
+            <div class="menu">
+                <h2>Class</h2>
+                <img src="icon/class.png" height="65%">
             </div>
         </div>
     </div>
