@@ -39,9 +39,6 @@
                     <label for="college">College:</label>
                     <select id="college" name="college" class="input" required>
                         <option value="">Select College</option>
-                        <option value="College1">College 1</option>
-                        <option value="College2">College 2</option>
-                        <option value="College3">College 3</option>
                     </select>
                     <label for="department">Department:</label>
                     <select id="department" name="department" class="input" required>
@@ -51,9 +48,13 @@
                     <select id="course" name="course" class="input" required>
                         <option value="">Select Course</option>
                     </select>
-                    <label for="semester">Semester:</label>
-                    <select id="sem" name="sem" class="input" required>
-                        <option value="">Select Semester</option>
+                    <label for="cls">Class:</label>
+                    <select id="cls" name="cls" class="input" required>
+                        <option value="">Select Class</option>
+                    </select>
+                    <label for="section">Section:</label>
+                    <select id="section" name="section" class="input" required>
+                        <option value="">Select Section</option>
                     </select>
                     <button type="submit" onclick="nextStep()">Next</button>
                 </div>
@@ -62,24 +63,26 @@
                     <img id="preview" style="max-width: 200px; display: none;"><br>
                     <lebel for="photo">Passport Size Photo:</lebel>
                     <input required type="file" id="photo" name="photo" accept="image/*" class="input" title="Upload Profile Picture" onchange="previewImage()">
-                    <lebel for="AdmissionProof">Admission Receipt:</lebel>
-                    <input required type="file" id="Receipt" name="Receipt" accept="image/*" class="input" title="Upload Admission Receipt">
+                    <lebel for="receipt">Admission Receipt:</lebel>
+                    <input required type="file" id="receipt" name="receipt" accept="image/*" class="input" title="Upload Admission Receipt">
                     <label for="password">Create Password:</label>
                     <input type="password" id="pass" name="pass" class="input" placeholder="Password" oninput="passValidate()" required>
                     <label for="CNFpassword">Confirm Password:</label>
                     <input type="password" id="CNFpass" name="CNFpass" class="input" placeholder="Confirm Password" oninput="passValidate()" required>
                     <span id="passWarning"></span>
                     <label for="mailVerify">Verify your mail:</label>
+                    <div id="otpPopup" class="popup"></div>
                     <div class="otp">
                         <input type="text" id="stdMailverify" readonly>
                         <button type="button" style="width: 25%; margin-top: 0;" id="send" onclick="sendOTP()">Send OTP</button>
                     </div>
-                    <div class="otp" id="otp1" style="display: none;">
-                        <span id="otpSent" style="display: none;"></span>
+                    <div id="otpPopup" class="popup"></div>
+                    <label for="stdOTP" id="otp1" style="display: none;">Enter OTP:</label>
+                    <div class="otp" id="otp2" style="display: none;">
                         <input type="text" id="stdOTP" name="stdOTP">
                         <button type="button" id="verify" onclick="validateStdOTP()" style="width: 25%; margin-top: 0;">Verify</button>
                     </div>
-                    <button type="button" onclick="studentSignup()">Sign Up</button>
+                    <button type="button" onclick="studentSignup(event)">Sign Up</button>
                     <button type="button" onclick="prevStep()">Previous</button>
                 </div>
             </form>

@@ -28,10 +28,8 @@
                 <div class="step" id="step1">
                     <label for="tchName">Name:</label>
                     <input type="text" id="tchName" name="tchName" class="input" required>
-                    <label for="tchDob">Date of Birth:</label>
-                    <input type="date" id="tchDob" name="tchDob" class="input" required>
-                    <label for="tchId">Teacher ID:</label>
-                    <input type="text" id="tchId" name="tchId" class="input" required>
+                    <label for="tchCode">Teacher ID:</label>
+                    <input type="text" id="tchCode" name="tchCode" class="input" required>
                     <label for="tchMob">Mobile Number:</label>
                     <input type="text" id="tchMob" name="tchMob" class="input" required>
                     <label for="tchMail">Email ID:</label>
@@ -39,11 +37,8 @@
                     <label for="college">College:</label>
                     <select id="college" name="college" class="input" required>
                         <option value="">Select College</option>
-                        <option value="College1">College 1</option>
-                        <option value="College2">College 2</option>
-                        <option value="College3">College 3</option>
                     </select>
-                    <button type="button" onclick="nextStep()">Next</button>
+                    <button type="submit" onclick="nextStep()">Next</button>
                 </div>
 
                 <div class="step" id="step2" style="display:none;">
@@ -60,12 +55,13 @@
                         <input type="text" id="tchMailverify" readonly>
                         <button type="button" style="width: 25%; margin-top: 0;" id="send" onclick="sendOTP()">Send OTP</button>
                     </div>
-                    <div class="otp" id="otp1" style="display: none;">
-                        <span id="otpSent" style="display: none;"></span>
+                    <div id="otpPopup" class="popup"></div>
+                    <label for="tchOTP" id="otp1" style="display: none;">Enter OTP:</label>
+                    <div class="otp" id="otp2" style="display: none;">
                         <input type="text" id="tchOTP" name="tchOTP">
                         <button type="button" id="verify" onclick="validateTchOTP()" style="width: 25%; margin-top: 0;">Verify</button>
                     </div>
-                    <button type="button" onclick="tchSignup()">Sign Up</button>
+                    <button type="button" onclick="teacherSignup(event)">Sign Up</button>
                     <button type="button" onclick="prevStep()">Previous</button>
                 </div>
             </form>

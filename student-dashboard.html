@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Dashboard - ClassLinker</title>
     <link rel="stylesheet" href="student-dashboard.css">
+    <script src="student-dashboard.js" defer></script>
 </head>
 <body>
     <header class="head">
@@ -12,18 +13,22 @@
         <nav>
             <ul>
                 <li><a href="index.html">Home</a></li>
-                <li><a href="#chat">Log Out</a></li>
+                <li><a href="student-login.html">Log Out</a></li>
             </ul>
         </nav>
     </header>
     <div class="bound">
         <section class="profile-info">
-            <img src="icon/studeng.jpg" alt="Profile Picture" class="profile-pic">
-            <h2>Suryadev Kumar</h2>
-            <p><b>Scholar ID:</b> 2320403144</p>
-            <p><b>College Name:</b> Maulana Azad National Institute of Technology, Bhopal (MANIT Bhopal)</p>
-            <p><b>Department:</b> MBC</p>
-            <p><b>Course:</b> Master in Computer Applications</p>
+            <img id="stdPic" src="" alt="Profile Picture" class="profile-pic">
+            <h2><span id="stdName"></span></h2>
+            <p><b>Scholar ID:</b><span id="schId"></span></p><br>
+            <p><b>College Name:</b> <span id="insName"></span></p><br>
+            <p><b>Email:</b> <span id="stdEmail"></span></p><br>
+            <p><b>Mobile No:</b> <span id="stdMob"></span></p><br>
+            <p><b>Department:</b> <span id="department"></span></p><br>
+            <p><b>Course:</b> <span id="course"></span></p><br>
+            <p><b>Class:</b> <span id="class"></span></p><br>
+            <p><b>Section:</b> <span id="section"></span></p>
         </section>
         <div class="menu-box">
             <div class="menu">

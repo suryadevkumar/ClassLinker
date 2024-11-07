@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Class - ClassLinker</title>
+    <link rel="stylesheet" href="addClass.css">
+    <script src="addClass.js" defer></script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>ClassLinker - Add Class</h1>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section id="add-class-section">
+        <div class="container">
+            <div class="add-class-form">
+                <h2>Add New Class</h2>
+                <form id="classData">
+                    <label for="department">Select Department:</label>
+                    <div class="dropdown-container">
+                        <select id="department" name="department" onchange="toggleDepartmentOptions()">
+                            <option value="">Select Department</option>
+                            <option value="addNew">Add New Department</option>
+                        </select>
+                    </div>
+                    <input type="text" id="newDep" name="newDep" placeholder="New Department Name" style="display: none; margin-top: 10px;" />
+                
+                    <label id="crsLabel" for="course" style="display: none;">Select Course:</label>
+                    <div class="dropdown-container">
+                        <select id="course" name="course" style="display: none;" onchange="toggleCourseOptions()">
+                            <option value="">Select Course</option>
+                            <option value="addNew">Add New Course</option>
+                        </select>
+                    </div>
+                    <input type="text" id="newCrs" name="newCrs" placeholder="New Course Name" style="display: none; margin-top: 10px;" />
+                
+                    <label for="className">Class Name:</label>
+                    <input type="text" id="className" name="className" placeholder="Class Name" required />
+                
+                    <label for="sectionNum">Number of Sections:</label>
+                    <input type="number" id="sectionNum" name="sectionNum" placeholder="Section" min="1" max="4" required />
+                
+                    <div class="form-buttons">
+                        <button type="button" class="submit-button" onclick="addClass()">Add Class</button>
+                        <a href="admin-dashboard.html"><button type="button" class="cancel-button">Cancel</button></a>
+                    </div>
+                </form>
+                                
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 ClassLinker. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

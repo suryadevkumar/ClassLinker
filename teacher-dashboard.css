@@ -6,11 +6,8 @@
 }
 
 body {
-    display: flex;
-    flex-direction: column;
     min-height: 100vh;
     background: linear-gradient(to right, #ffecd2, #fcb69f);
-    justify-content: space-between;
 }
 
 .head{
@@ -52,18 +49,19 @@ section {
 .bound{
     display: flex;
     flex-direction: row;
-
+    align-items: center;
+    margin: 0 auto;
+    width: 98%;
 }
 
 .profile-info {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    width: 100%;
     text-align: center;
-    text-wrap: nowrap;
     padding: 20px;
     background-color: #fff;
     border-radius: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 .profile-pic {
@@ -110,13 +108,13 @@ footer {
     }
     .bound{
         flex-direction: column;
+        width: 96%;
     }
     header h1 {
         margin-bottom: 1rem;
     }
 
     .profile-info {
-        width: 100%;
         padding: 1rem;
         text-wrap: wrap;
     }

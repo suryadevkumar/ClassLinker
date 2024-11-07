@@ -47,7 +47,7 @@
                 <div class="step" id="step2" style="display:none;">
                     <img id="preview" style="max-width: 200px; display: none;"><br>
                     <lebel for="photo">Passport Size Photo:</lebel>
-                    <input required type="file" id="photo" name="photo" accept="image/*" class="input" title="Upload Profile Picture" onchange="previewImage()">
+                    <input required type="file" id="photo" name="photo" accept="image/jpeg" class="input" title="Upload Profile Picture" onchange="previewImage()">
                     <label for="password">Create Password:</label>
                     <input type="password" id="pass" name="pass" class="input" placeholder="Password" oninput="passValidate()" required>
                     <label for="CNFpassword">Confirm Password:</label>
@@ -58,8 +58,7 @@
                         <input type="text" id="insMailverify" readonly>
                         <button type="button" style="width: 25%; margin-top: 0;" id="send1" onclick="sendOTP1()">Send OTP</button>
                     </div>
-                    <div id="otpPopup" class="popup">
-                    </div>
+                    <div id="otpPopup" class="popup"></div>
                     <label for="insOTP" id="otp1" style="display: none;">Enter OTP:</label>
                     <div class="otp" id="otp2" style="display: none;">
                         <input type="text" id="insOTP" name="insOTP">

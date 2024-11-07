@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Login - ClassLinker</title>
     <link rel="stylesheet" href="student-login.css">
+    <script src="student-login.js" defer></script>
 </head>
 <body>
     <header>
@@ -27,17 +28,17 @@
                 <form>
                     <div class="login_input">
                         <img src="icon/mail.png" width="22px">
-                        <input required type="email" placeholder="Email" class="input">
+                        <input required type="email" placeholder="Email" class="input" id="stdMail">
                     </div><br>
                     <div class="login_input">
                         <img src="icon/lock.png" width="23px">
-                        <input required type="password" placeholder="Your Password" class="input">
+                        <input required type="password" placeholder="Your Password" class="input" id="pass">
                     </div><br>
                         <input type="checkbox" style="margin-left: 10px;">
                         <label>Remember me</label>
                         <a href="reset-password.html" style="float: inline-end;margin-right: 20px; color: blue;">Forgot password?</a>
                         <br><br>
-                        <button type="submit"><a href="student-dashboard.html" style="color: white;">Log In</a></button><br><br>
+                        <button type="submit" onclick="studentLogin(event)">Log In</button><br><br>
                         Don't hava an account? <a href="student-signup.html"style="color: blue;">Sign up</a>
                 </form>
             </div>

@@ -3,16 +3,16 @@ window.onload= function(){
     fetch('/fetchAdminCredentials')
     .then(response=>response.json())
     .then(data=>{
-        document.getElementById('curName').value=data[0];
-        document.getElementById('curEmail').value=data[1];
-        document.getElementById('curMob').value=data[2];
-        // document.getElementById('currentName').value=data[3];
+        document.getElementById('curName').value=data.ad_name;
+        document.getElementById('curEmail').value=data.ad_email;
+        document.getElementById('curMob').value=data.ad_mobile;
+        document.getElementById('preview').src=`data:image/jpeg;base64,${data.ad_pic}`;
     })
 }
 
 //function to preview admin pic
 function previewImage() {
-    const file = document.getElementById('newPic').files[0];
+    const file = document.getElementById('adPic').files[0];
     const preview = document.getElementById('preview');
     const warning = document.getElementById('warning'); // Add a warning message element
 
@@ -179,7 +179,8 @@ function updateCredentials(){
     const adName=document.getElementById('adName').value;
     const adMob=document.getElementById('adMob').value;
     const adEmail=document.getElementById('adEmail').value;
-    if(!adName && !adMob && !adEmail)
+    const adPic=document.getElementById('adPic').files[0];
+    if(!adName && !adMob && !adEmail && !adPic)
     {
         alert('No any update Found!');
         window.location.href='institute-dashboard.html'
@@ -231,6 +232,7 @@ function validateInsOTP()
             document.getElementById('insOTP').readOnly=true;
             btn2.disabled= true;
             document.getElementById('adEmail').disabled=true;
+            document.getElementById('adPic').readOnly=true;
             document.getElementById('editEmail').disabled=true;
             document.getElementById('editName').disabled=true;
             document.getElementById('adName').readOnly=true;
@@ -251,10 +253,18 @@ function confirmCredentials(){
     const adName=document.getElementById('adName').value;
     const adMob=document.getElementById('adMob').value;
     const adEmail=document.getElementById('adEmail').value;
-    fetch('/changeAdminCredentials',{
+    const adPic=document.getElementById('adPic').files[0];
+    const formData = new FormData();
+    formData.append('adName', adName);
+    formData.append('adMob', adMob);
+    formData.append('adEmail', adEmail);
+    if (adPic) {
+        formData.append('photo', adPic);
+    }
+
+    fetch('/changeAdminCredentials', {
         method: 'POST',
-        headers: {'content-type':'application/json'},
-        body: JSON.stringify({adName, adMob, adEmail})
+        body: formData
     })
     .then(response=>response.text())
     .then(data=>{

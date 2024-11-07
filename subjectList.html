@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class Subjects - Admin</title>
+    <link rel="stylesheet" href="subjectList.css">
+    <script src="subjectList.js" defer></script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Class Subjects Management</h1>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section id="subject-section">
+        <div class="container">
+            <div class="subject-form">
+                <div class="heading-with-button">
+                    <h2>Class Subject List</h2>
+                    <button class="add-subject-button" onclick="addSubject()">Add Subject</button>
+                </div>
+                <div>
+                    <b>Department Name: </b><span id="dep_name"></span><br><br>
+                    <b>Course Name: </b><span id="crs_name"></span><br><br>
+                    <b>Class Name: </b><span id="cls_name"></span><br><br>
+                </div>
+                <div class="subject-list">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Sr.</th>
+                                <th>Subject Name</th>
+                                <th>Assigned Teacher</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="subject-table-body">
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div id="subjectModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Add New Subject</h2><br>
+            <form id="add-subject-form">
+                <label for="subName">Subject Name:</label>
+                <input type="text" id="subName" name="subName" required>
+
+                <label for="teacherDropdown">Assign Teacher:</label>
+                <select id="teacherDropdown" name="teacherDropdown" required style="cursor: pointer;">
+                </select>
+
+                <button type="submit" onclick="submitSubject(event)" style="background-color: green; padding: 5px; border: none; border-radius: 5px; cursor: pointer;">Add Subject</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="editSubModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal1()">&times;</span>
+            <h2>Edit Subject</h2><br>
+            <form id="add-subject-form">
+                <label for="newSubName">Subject Name:</label>
+                <input type="text" id="newSubName" name="subName" required>
+
+                <label for="teacherDropdown1">Assign Teacher:</label>
+                <select id="teacherDropdown1" name="teacherDropdown1" required style="cursor: pointer;">
+                </select>
+
+                <button type="submit" onclick="saveSubject(event)" style="background-color: green; padding: 5px; border: none; border-radius: 5px; cursor: pointer;">Save</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="confirmModal" class="modal1">
+        <div class="modal1-content">
+            Are you sure to delete?<br><br>
+            <button type="submit" onclick="delSubject(event)" style="background-color: green; color: white; padding: 5px; border: none; border-radius: 5px; cursor: pointer;">Delete</button>
+            <button type="submit" onclick="closeModal2(event)" style="background-color: red; color: white; padding: 5px; border: none; border-radius: 5px; cursor: pointer; float: inline-end;">Cancel</button>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 ClassLinker. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

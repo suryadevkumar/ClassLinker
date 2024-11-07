@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - ClassLinker</title>
+    <link rel="stylesheet" href="classList.css">
+    <script src="classList.js" defer></script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>ClassLinker - Admin</h1>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section id="admin-section">
+        <div class="container">
+            <div class="admin-form">
+                <h2>Select Class Details</h2>
+                <div class="dropdown-container">
+                    <select id="department">
+                        <option value="">Select Department</option>
+                    </select>
+
+                    <select id="course">
+                        <option value="">Select Course</option>
+                    </select>
+
+                    <select id="class">
+                        <option value="">Select Class</option>
+                    </select>
+
+                    <a href="addClass.html"><button class="add-class-button">Add Class</button></a>
+                </div>
+            </div>
+
+            <!-- Class List Section -->
+            <div class="class-list">
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 ClassLinker. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

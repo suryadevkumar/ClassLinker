@@ -1,0 +1,177 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background: linear-gradient(to right, #ffecd2, #fcb69f);
+}
+
+header {
+    background: #ff6f61;
+    color: #fff;
+    padding: 1rem 0;
+}
+
+header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    margin-left: 1rem;
+}
+
+header nav ul {
+    display: flex;
+    list-style: none;
+    margin-right: 1rem;
+}
+
+header nav ul li {
+    margin-left: 1rem;
+}
+
+header nav ul li a {
+    color: #fff;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+}
+
+header nav ul li a:hover {
+    background: #ff8364;
+    border-radius: 5px;
+}
+
+section {
+    padding: 2rem 0;
+    flex-grow: 1;
+}
+
+#admin-section .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-grow: 1;
+}
+
+.admin-form {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 1rem;
+    width: 60%;
+    animation: slideIn 1s;
+}
+
+.admin-form h2 {
+    margin-bottom: 1rem;
+}
+
+.dropdown-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.dropdown-container select {
+    margin-right: 10px;
+    padding: 0.5rem;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    width: 100%;
+    max-width: 150px; 
+}
+
+.add-class-button {
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.add-class-button:hover {
+    background: #218838;
+}
+
+.class-list {
+    width: 60%;
+    margin-top: 20px;
+}
+
+.class-card {
+    background: #f8f9fa;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 1rem;
+    margin: 0.5rem 0;
+    display: flex;
+    justify-content: space-between; /* Ensures space between class details and the button */
+    align-items: center; /* Vertically centers the content */
+}
+
+.edit-button {
+    background: #007bff; /* Blue background for the button */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    transition: background 0.3s;
+    margin-left: auto;
+}
+
+.class-number {
+    background: #007bff; /* Blue background for numbering */
+    color: white;
+    border-radius: 50%;
+    padding: 0.5rem;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 30px;
+}
+
+.edit-button:hover {
+    background: #0056b3;
+}
+
+footer {
+    background: #ff6f61;
+    color: #fff;
+    text-align: center;
+    padding: 1rem 0;
+}
+
+@media (max-width: 768px) {
+    .admin-form {
+        width: 90%;
+    }
+    .class-list {
+        width: 90%;
+    }
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(100px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}

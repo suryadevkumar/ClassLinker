@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Teacher Dashboard - ClassLinker</title>
     <link rel="stylesheet" href="teacher-dashboard.css">
+    <script src="teacher-dashboard.js" defer></script>
 </head>
 <body>
     <header class="head">
@@ -12,18 +13,18 @@
         <nav>
             <ul>
                 <li><a href="index.html">Home</a></li>
-                <li><a href="#chat">Log Out</a></li>
+                <li><a href="teacher-login.html">Log Out</a></li>
             </ul>
         </nav>
     </header>
     <div class="bound">
         <section class="profile-info">
-            <img src="https://th.bing.com/th/id/OIP.qYNgLk5HAwC1iiSmdd8DnAHaHa?pid=ImgDet&w=208&h=208&c=7&dpr=1.5" alt="Profile Picture" class="profile-pic">
-            <h2>Dr.Jitendra Mishra</h2>
-            <p><b>Teacher ID:</b> 123456</p>
-            <p><b>College Name:</b> Maulana Azad National Institute of Technology, Bhopal (MANIT Bhopal)</p>
-            
-            <p><b>Subject</b>:</b> Mathematics</p>
+            <img id="tchPic" src="" alt="Profile Picture" class="profile-pic">
+            <h2><span id="tchName"></span></h2>
+            <p><b>Teacher ID: </b><span id="tchId"></span></p><br>
+            <p><b>College Name: </b><span id="insName"></span></p><br>
+            <p><b>Email: </b><span id="tchEmail"></span></p><br>
+            <p><b>Mobile: </b><span id="tchMob"></span></p>
         </section>
         <div class="menu-box">
             <div class="menu">

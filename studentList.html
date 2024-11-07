@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - ClassLinker</title>
+    <link rel="stylesheet" href="studentList.css">
+    <script src="studentList.js" defer></script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>ClassLinker - Admin</h1>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section id="admin-section">
+        <div class="container">
+            <div class="admin-form">
+                <h2>Select Student Details</h2>
+                <div class="dropdown-container">
+                    <select id="department">
+                        <option value="">Select Department</option>
+                    </select>
+
+                    <select id="course">
+                        <option value="">Select Course</option>
+                    </select>
+
+                    <select id="class">
+                        <option value="">Select Class</option>
+                    </select>
+
+                    <button class="view-student-button" onclick="studentListLoad()">View List</button>
+                </div>
+            </div>
+
+            <div class="student-list">
+                <h2>Student List</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>SCholar ID</th>
+                            <th>Name</th>
+                            <th>Department</th>
+                            <th>Course</th>
+                            <th>Year</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="student-table-body">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 ClassLinker. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
