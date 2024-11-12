@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notes - ClassLinker</title>
-    <link rel="stylesheet" href="notes.css">
-    <script src="stduent-notes.js" defer></script>
+    <title>Teacher - ClassLinker</title>
+    <link rel="stylesheet" href="assignment.css">
+    <script src="assignment.js" defer></script>
 </head>
 <body>
     <header>
@@ -21,10 +21,18 @@
         </div>
     </header>
 
-    <section id="notes-section">
+    <section id="assignment-section">
         <div class="container">
-            <h2>Subject: <span id="sub_name"></span></h2>
-            <div class="notes-list" id="notesList">
+            <div class="assignment-form">
+                <h2>Upload assignment</h2>
+                <form id="uploadForm">
+                    <input type="text" id="assignmentTitle" placeholder="Enter assignment title" required>
+                    <input type="file" id="assignmentFile" accept=".pdf, .docx, .txt, .jpeg, .jpg" required>
+                    <button type="submit" class="upload-button" onclick="uploadAssignment(event)">Upload Assignment</button>
+                </form>
+            </div>
+
+            <div class="assignment-list" id="assignmentList">
             </div>
         </div>
     </section>

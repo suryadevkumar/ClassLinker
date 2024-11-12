@@ -46,6 +46,15 @@ section {
     flex-grow: 1;
 }
 
+.unverified{
+    margin: 0 auto;
+    padding: 25px 0;
+    border-radius: 10px;
+    text-align: center;
+    width: 55%;
+    background-color: #fff;
+}
+
 .bound{
     display: flex;
     flex-direction: row;
@@ -94,6 +103,34 @@ h2 {
     border-radius: 10px;
 }
 
+.modal{
+    display: none; 
+    position: fixed;
+    z-index: 1;
+    padding-top: 100px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 30%;
+    border-radius: 10px;
+}
+
+#select-subject-form select {
+    width: 100%;
+    padding: 8px;
+    margin: 8px 0;
+    box-sizing: border-box;
+}
+
 footer {
     background: #ff6f61;
     color: #fff;
@@ -122,5 +159,8 @@ footer {
     .profile-pic {
         width: 110px;
         height: 110px;
+    }
+    .modal-content {
+        width: 50%;
     }
 }

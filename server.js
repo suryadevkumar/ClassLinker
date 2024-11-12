@@ -42,7 +42,6 @@ const transporter = nodemailer.createTransport({
 });
 
 //institute signup
-
 //check email are in used or not
 app.post('/checkEmailUsed',async(req,res)=>{
     const{instMail, adMail}=req.body;
@@ -1182,17 +1181,24 @@ app.post('/studentLogin',async (req,res)=>{
 })
 
 //function for student dashboard data fetch
+let idcc_id1=0;
+let std_id=0;
+let userID=0;
+let userName='';
 app.get('/studentDetailsFetch', async (req, res) => {
     let connection;
     try {
         connection = await oracledb.getConnection(dbConfig);
         const result = await connection.execute(
-            `SELECT std_name, sch_id, std_email, std_mobile, std_pic, idcc_id FROM student WHERE std_email = :email`,
+            `SELECT std_id, std_name, sch_id, std_email, std_mobile, std_pic, idcc_id, verified FROM student WHERE std_email = :email`,
             { email: studentMail }
         );
         
-        const [stdName, schid, stdEmail, stdMobile, stdPic, idcc] = result.rows[0];
-        
+        const [stdId, stdName, schid, stdEmail, stdMobile, stdPic, idcc, verified] = result.rows[0];
+        idcc_id1=idcc;
+        std_id=stdId;
+        userID=stdId;
+        userName=stdName;
         const result1 = await connection.execute(
             `SELECT ins_name, dep_name, crs_name, cls_name, section FROM class_view WHERE idcc_id = :idcc`,
             { idcc: idcc }
@@ -1223,6 +1229,7 @@ app.get('/studentDetailsFetch', async (req, res) => {
         const base64AdPic = await handleLob(stdPic);
 
         res.json({
+            std_id: stdId,
             std_name: stdName,
             sch_id: schid,
             std_email: stdEmail,
@@ -1232,7 +1239,8 @@ app.get('/studentDetailsFetch', async (req, res) => {
             dep_name: depName,
             crs_name: crsName,
             cls_name: clsName,
-            section: sec
+            section: sec,
+            verified: verified
         });
     } catch (err) {
         console.error('Error fetching admin details:', err);
@@ -1382,17 +1390,20 @@ app.post('/teacherLogin',async (req,res)=>{
 })
 
 //function for teacher dashboard data fetch
+let teacher_id=0;
 app.get('/teacherDetailsFetch', async (req, res) => {
     let connection;
     try {
         connection = await oracledb.getConnection(dbConfig);
         const result = await connection.execute(
-            `SELECT tch_name, tch_code, tch_email, tch_mobile, tch_pic, ins_id FROM teacher WHERE tch_email = :email`,
+            `SELECT tch_id, tch_name, tch_code, tch_email, tch_mobile, tch_pic, ins_id, verified FROM teacher WHERE tch_email = :email`,
             { email: teacherMail }
         );
         
-        const [tchName, tchId, tchEmail, tchMobile, tchPic, insId] = result.rows[0];
-        
+        const [tch_id, tchName, tchId, tchEmail, tchMobile, tchPic, insId, verified] = result.rows[0];
+        teacher_id=tch_id;
+        userID=tch_id;
+        userName=tchName;
         const result1 = await connection.execute(
             `SELECT ins_name FROM institute WHERE ins_id = :insId`,
             { insId: insId }
@@ -1423,12 +1434,14 @@ app.get('/teacherDetailsFetch', async (req, res) => {
         const base64AdPic = await handleLob(tchPic);
 
         res.json({
+            user_id: tch_id,
             tch_name: tchName,
             tch_id: tchId,
             tch_email: tchEmail,
             tch_mobile: tchMobile,
             tch_pic: base64AdPic,
-            ins_name: insName
+            ins_name: insName,
+            verified: verified
         });
     } catch (err) {
         console.error('Error fetching admin details:', err);
@@ -1439,6 +1452,608 @@ app.get('/teacherDetailsFetch', async (req, res) => {
                 await connection.close();
             } catch (closeErr) {
                 console.error('Error closing connection:', closeErr);
+            }
+        }
+    }
+});
+
+//load subject list in select box
+app.get('/subList',async(req, res)=>{
+    let connection;
+    try{
+        connection=await oracledb.getConnection(dbConfig);
+        const result=await connection.execute(`SELECT sub_id, dep_name, crs_name, cls_name, sub_name FROM subject_view WHERE tch_id=:tchId`,{tchId: teacher_id});
+        res.json(result.rows);
+    }
+    catch(err){
+        console.error(err);
+    }
+    finally{
+        if(connection)
+        {
+            try{
+                connection.close();
+            }
+            catch(err){
+                console.error(err);
+            }
+        }
+    }
+})
+
+//function to find subject details
+let idcc_id=0;
+app.post('/getSubDetails',async(req,res)=>{
+    const {sub_id}=req.body;
+    let connection;
+    try{
+        connection=await oracledb.getConnection(dbConfig);
+        const result=await connection.execute(`SELECT dep_name, crs_name, cls_name, sub_name, idcc_id FROM subject_view WHERE sub_id=:subId`,{subId: sub_id});
+        idcc_id=result.rows[0][4];
+        res.json(result.rows);
+    }
+    catch(err){
+        console.error(err);
+    }
+    finally{
+        if(connection)
+        {
+            try{
+                connection.close();
+            }
+            catch(err){
+                console.error(err);
+            }
+        }
+    }
+})
+
+//function to load student details for attendance
+app.get('/getStudentDetails',async(req,res)=>{
+    let connection;
+    try{
+        connection=await oracledb.getConnection(dbConfig);
+        const result=await connection.execute(`SELECT std_id, sch_id, std_name, std_pic FROM student WHERE verified=1 AND idcc_id=:idccId`,{idccId: idcc_id});
+        const rows = result.rows;
+
+        const handleLob = (lob) => {
+            return new Promise((resolve, reject) => {
+                let chunks = [];
+                lob.on('data', (chunk) => {
+                    chunks.push(chunk);
+                });
+
+                lob.on('end', () => {
+                    const buffer = Buffer.concat(chunks);
+                    const base64Pic = buffer.toString('base64');
+                    resolve(base64Pic);
+                });
+
+                lob.on('error', (err) => {
+                    console.error('LOB streaming error:', err);
+                    reject(err);
+                });
+            });
+        };
+
+        const studentsWithPics = await Promise.all(rows.map(async (row) => {
+            const [stdId, schId, stdName, stdPic] = row;
+
+            const base64Pic = await handleLob(stdPic);
+
+            return {
+                std_id: stdId,
+                sch_id: schId,
+                std_name: stdName,
+                std_pic: base64Pic
+            };
+        }));
+
+        res.json(studentsWithPics);
+    }
+    catch(err){
+        console.error(err);
+    }
+    finally{
+        if(connection)
+        {
+            try{
+                connection.close();
+            }
+            catch(err){
+                console.error(err);
+            }
+        }
+    }
+})
+
+//function to get attendance status
+app.post('/getAttendanceStats', async (req, res) => {
+    const { std_id, sub_id } = req.body;
+    let connection;
+
+    try {
+        connection = await oracledb.getConnection(dbConfig);
+        
+        const totalClassesResult = await connection.execute(
+            `SELECT COUNT(*) AS total_classes 
+            FROM attendance 
+            WHERE sub_id = :sub_id AND std_id= :std_id`,
+            { sub_id: sub_id, std_id: std_id }
+        );
+        
+        const totalPresentResult = await connection.execute(
+            `SELECT COUNT(*) AS total_present 
+            FROM attendance 
+            WHERE sub_id = :sub_id 
+            AND std_id = :std_id 
+            AND attend_status = 'Present'`,
+            {
+                sub_id: sub_id,
+                std_id: std_id
+            }
+        );
+
+        res.json({
+            totalClasses: totalClassesResult.rows[0][0],
+            totalPresent: totalPresentResult.rows[0][0]
+        });
+    } catch (err) {
+        console.error('Error fetching attendance stats:', err);
+    } finally {
+        if (connection) {
+            try {
+                await connection.close();
+            } catch (err) {
+                console.error('Error closing connection:', err);
+            }
+        }
+    }
+});
+
+//fucntion to mark attendance
+app.post('/markAttendance', async (req, res) => {
+    const { std_id, sub_id, status } = req.body;
+    let connection;
+
+    try {
+        connection = await oracledb.getConnection(dbConfig);
+        await connection.execute(
+            `INSERT INTO attendance (attend_id, attend_date, attend_status, std_id, sub_id)
+            VALUES (attend_id_seq.NEXTVAL, SYSDATE, :status, :std_id, :sub_id)`,
+            {
+                status: status,
+                std_id: std_id,
+                sub_id: sub_id
+            },
+            { autoCommit: true }
+        );
+    } catch (err) {
+        console.error('Error executing query:', err);
+    } finally {
+        if (connection) {
+            try {
+                await connection.close();
+            } catch (err) {
+                console.error('Error closing connection:', err);
+            }
+        }
+    }
+});
+
+//update status of attendance
+app.post('/updateAttendance', async (req, res) => {
+    const { std_id, sub_id, status } = req.body;
+    let connection;
+    try {
+        connection = await oracledb.getConnection(dbConfig);
+        
+        const result=await connection.execute(
+            `UPDATE attendance 
+            SET attend_status = :status 
+            WHERE std_id = :std_id 
+            AND sub_id = :sub_id 
+            AND TRUNC(attend_date) = TRUNC(SYSDATE)`,
+            {
+                status: status,
+                std_id: std_id,
+                sub_id: sub_id
+            },
+            { autoCommit: true }
+        );
+    } catch (err) {
+        console.error('Error updating attendance:', err);
+    } finally {
+        if (connection) {
+            try {
+                await connection.close();
+            } catch (err) {
+                console.error('Error closing connection:', err);
+            }
+        }
+    }
+});
+
+//notes
+//function to load notes
+app.post('/getNotesList', async (req, res) => {
+    const { sub_id } = req.body;
+    let connection;
+
+    try {
+        connection = await oracledb.getConnection(dbConfig);
+        const result = await connection.execute(
+            `SELECT notes_id, notes_name FROM notes WHERE sub_id = :subId`,
+            { subId: sub_id }
+        );
+        res.json(result.rows);
+    } catch (err) {
+        console.error('Error fetching notes:', err);
+    } finally {
+        if (connection) {
+            try {
+                await connection.close();
+            } catch (err) {
+                console.error('Error closing connection:', err);
+            }
+        }
+    }
+});
+
+//function to upload notes
+app.post('/uploadNotes', upload.single('noteFile'), async (req, res) => {
+    const { noteTitle, sub_id } = req.body;
+    const noteFile = req.file?.buffer;
+
+    let connection;
+
+    try {
+        connection = await oracledb.getConnection(dbConfig);
+
+        const result = await connection.execute(
+            `INSERT INTO notes (notes_id, notes_name, notes_file, sub_id) 
+             VALUES (notes_id_seq.NEXTVAL, :noteTitle, :noteFile, :sub_id)`, {
+            noteTitle: noteTitle,
+            noteFile: { val: noteFile, type: oracledb.BLOB }, 
+            sub_id: sub_id
+        }, { autoCommit: true });
+
+        res.json({ success: true });
+    } catch (err) {
+        console.error('Error uploading note:', err);
+    } finally {
+        if (connection) {
+            try {
+                await connection.close();
+            } catch (err) {
+                console.error(err);
+            }
+        }
+    }
+});
+
+//download notes
+app.get('/downloadNote/:noteId', async (req, res) => {
+    const { noteId } = req.params;
+    let connection;
+
+    try {
+        connection = await oracledb.getConnection(dbConfig);
+
+        const result = await connection.execute(
+            `SELECT notes_name, notes_file FROM notes WHERE notes_id = :noteId`,
+            { noteId: noteId }
+        );
+
+        if (result.rows.length === 0) {
+            res.status(404).send('Note not found');
+            return;
+        }
+
+        const note = result.rows[0];
+        const fileName = note[0];
+        const fileData = note[1];
+
+        if (fileData && fileData.length > 0) {
+            res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
+            res.setHeader('Content-Type', 'application/octet-stream');
+
+            res.send(fileData);
+        } else {
+            res.status(500).send('File data is empty or corrupted');
+        }
+    } catch (err) {
+        console.error('Error downloading note:', err);
+        res.status(500).send('Internal server error');
+    } finally {
+        if (connection) {
+            try {
+                await connection.close();
+            } catch (err) {
+                console.error(err);
+            }
+        }
+    }
+});
+
+//delete notes
+app.delete('/deleteNote/:noteId', async (req, res) => {
+    const { noteId } = req.params;
+    let connection;
+
+    try {
+        connection = await oracledb.getConnection(dbConfig);
+
+        const result = await connection.execute(
+            `DELETE FROM notes WHERE notes_id = :noteId`,
+            { noteId: noteId },
+            { autoCommit: true }
+        );
+        res.send('Note deleted successfully');
+    } catch (err) {
+        console.error('Error deleting note:', err);
+    } finally {
+        if (connection) {
+            try {
+                await connection.close();
+            } catch (err) {
+                console.error(err);
+            }
+        }
+    }
+});
+
+//assignment
+//function to load assignment
+app.post('/getAssignmentList', async (req, res) => {
+    const { sub_id } = req.body;
+    let connection;
+
+    try {
+        connection = await oracledb.getConnection(dbConfig);
+        const result = await connection.execute(
+            `SELECT as_id, as_name FROM assignment WHERE sub_id = :subId`,
+            { subId: sub_id }
+        );
+        res.json(result.rows);
+    } catch (err) {
+        console.error('Error fetching assignment:', err);
+    } finally {
+        if (connection) {
+            try {
+                await connection.close();
+            } catch (err) {
+                console.error('Error closing connection:', err);
+            }
+        }
+    }
+});
+
+//function to upload assignment
+app.post('/uploadAssignment', upload.single('assignmentFile'), async (req, res) => {
+    const { assignmentTitle, sub_id } = req.body;
+    const assignmentFile = req.file?.buffer;
+
+    let connection;
+
+    try {
+        connection = await oracledb.getConnection(dbConfig);
+
+        const result = await connection.execute(
+            `INSERT INTO assignment (as_id, as_name, as_file, sub_id) 
+             VALUES (assignment_id_seq.NEXTVAL, :assignmentTitle, :assignmentFile, :sub_id)`, {
+            assignmentTitle: assignmentTitle,
+            assignmentFile: { val: assignmentFile, type: oracledb.BLOB }, 
+            sub_id: sub_id
+        }, { autoCommit: true });
+
+        res.json({ success: true });
+    } catch (err) {
+        console.error('Error uploading assignment:', err);
+    } finally {
+        if (connection) {
+            try {
+                await connection.close();
+            } catch (err) {
+                console.error(err);
+            }
+        }
+    }
+});
+
+//download notes
+// app.get('/downloadNote/:noteId', async (req, res) => {
+//     const { noteId } = req.params;
+//     let connection;
+
+//     try {
+//         connection = await oracledb.getConnection(dbConfig);
+
+//         const result = await connection.execute(
+//             `SELECT notes_name, notes_file FROM notes WHERE notes_id = :noteId`,
+//             { noteId: noteId }
+//         );
+
+//         if (result.rows.length === 0) {
+//             res.status(404).send('Note not found');
+//             return;
+//         }
+
+//         const note = result.rows[0];
+//         const fileName = note[0];
+//         const fileData = note[1];
+
+//         if (fileData && fileData.length > 0) {
+//             res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
+//             res.setHeader('Content-Type', 'application/octet-stream');
+
+//             res.send(fileData);
+//         } else {
+//             res.status(500).send('File data is empty or corrupted');
+//         }
+//     } catch (err) {
+//         console.error('Error downloading note:', err);
+//         res.status(500).send('Internal server error');
+//     } finally {
+//         if (connection) {
+//             try {
+//                 await connection.close();
+//             } catch (err) {
+//                 console.error(err);
+//             }
+//         }
+//     }
+// });
+
+//delete assignment
+app.delete('/deleteAssignment/:assignmentId', async (req, res) => {
+    const { assignmentId } = req.params;
+    let connection;
+
+    try {
+        connection = await oracledb.getConnection(dbConfig);
+
+        const result = await connection.execute(
+            `DELETE FROM assignment WHERE as_id = :assignmentId`,
+            { assignmentId: assignmentId },
+            { autoCommit: true }
+        );
+        res.send('Assignment deleted successfully');
+    } catch (err) {
+        console.error('Error deleting assignment:', err);
+    } finally {
+        if (connection) {
+            try {
+                await connection.close();
+            } catch (err) {
+                console.error(err);
+            }
+        }
+    }
+});
+
+//function to load subject list in student dashboard
+app.get('/subList1',async(req, res)=>{
+    let connection;
+    try{
+        connection=await oracledb.getConnection(dbConfig);
+        const result=await connection.execute(`SELECT sub_id, sub_name FROM subject WHERE idcc_id=:idccId`,{idccId: idcc_id1});
+        res.json(result.rows);
+    }
+    catch(err){
+        console.error(err);
+    }
+    finally{
+        if(connection)
+        {
+            try{
+                connection.close();
+            }
+            catch(err){
+                console.error(err);
+            }
+        }
+    }
+})
+
+//function to load student attendance sheet and status for student view
+app.post('/getAttendanceDetails', async (req, res) => {
+    const { sub_id } = req.body;
+    let connection;
+
+    try {
+        connection = await oracledb.getConnection(dbConfig);
+        const result=await connection.execute(
+            `SELECT TO_CHAR(ATTEND_DATE, 'DD/MM/YYYY') AS attend_date, attend_status 
+            FROM attendance 
+            WHERE sub_id = :sub_id AND std_id= :std_id`,
+            { sub_id: sub_id, std_id: std_id }
+        );
+
+        const totalClassesResult = await connection.execute(
+            `SELECT COUNT(*) AS total_classes 
+            FROM attendance 
+            WHERE sub_id = :sub_id AND std_id= :std_id`,
+            { sub_id: sub_id, std_id: std_id }
+        );
+        
+        const totalPresentResult = await connection.execute(
+            `SELECT COUNT(*) AS total_present 
+            FROM attendance 
+            WHERE sub_id = :sub_id 
+            AND std_id = :std_id 
+            AND attend_status = 'Present'`,
+            {
+                sub_id: sub_id,
+                std_id: std_id
+            }
+        );
+
+        res.json({
+            attendences: result.rows,
+            totalClasses: totalClassesResult.rows[0][0],
+            totalPresent: totalPresentResult.rows[0][0]
+        });
+    } catch (err) {
+        console.error('Error fetching attendance stats:', err);
+    } finally {
+        if (connection) {
+            try {
+                await connection.close();
+            } catch (err) {
+                console.error('Error closing connection:', err);
+            }
+        }
+    }
+});
+
+//chat
+//function to load chats
+app.post('/getchats', async (req, res) => {
+    const {sub_id}=req.body;
+    console.log(sub_id);
+    let connection;
+    try {
+        connection = await oracledb.getConnection(dbConfig);
+        const result = await connection.execute(`
+            SELECT user_id, user_name, message,TO_CHAR(time, 'DD-MM-YYYY HH:MI AM') AS time FROM chat WHERE sub_id=:sub_id order by chat_id`,
+        {sub_id: sub_id});
+        res.json(result.rows);
+    } catch (err) {
+        console.error(err);
+    } finally {
+        if (connection) {
+            try {
+                await connection.close();
+            } catch (err) {
+                console.error(err);
+            }
+        }
+    }
+});
+
+//function to send message
+app.post('/sendMessage', async (req, res) => {
+    const {sub_id, message} = req.body;
+    let connection;
+
+    try {
+        connection = await oracledb.getConnection(dbConfig);
+
+        const result=await connection.execute(
+            `INSERT INTO chat (chat_id, user_id, user_name, sub_id, message, time) VALUES 
+            (chat_id_seq.NEXTVAL,:userID, :userName, :sub_id, :message, SYSTIMESTAMP)`,
+            {userID, userName, sub_id, message},
+            { autoCommit: true });
+        res.send('true');
+    } catch (err) {
+        console.error(err);
+    } finally {
+        if (connection) {
+            try {
+                await connection.close();
+            } catch (err) {
+                console.error("Error closing connection:", err);
             }
         }
     }

@@ -54,13 +54,13 @@ section {
     flex-grow: 1;
 }
 
-#notes-section .container {
+#assignment-section .container {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.notes-form {
+.assignment-form {
     background: #fff;
     padding: 2rem;
     border-radius: 10px;
@@ -70,17 +70,17 @@ section {
     animation: slideIn 1s;
 }
 
-.notes-form h2 {
+.assignment-form h2 {
     margin-bottom: 1rem;
 }
 
-.notes-form form {
+.assignment-form form {
     display: flex;
     flex-direction: column;
 }
 
-.notes-form input[type="text"], 
-.notes-form input[type="file"] {
+.assignment-form input[type="text"], 
+.assignment-form input[type="file"] {
     margin-bottom: 10px;
     padding: 0.5rem;
     border: 1px solid #ccc;
@@ -101,12 +101,12 @@ section {
     background: #218838;
 }
 
-.notes-list {
+.assignment-list {
     width: 50%;
     margin-top: 20px;
 }
 
-.note-card {
+.assignment-card {
     background: #f8f9fa;
     border: 1px solid #ccc;
     border-radius: 10px;
@@ -117,7 +117,7 @@ section {
     align-items: center;
 }
 
-.note-index {
+.assignment-index {
     background: #007bff;
     color: white;
     border-radius: 50%;
@@ -130,16 +130,16 @@ section {
     margin-right: 10px;
 }
 
-.note-image{
+.assignment-image{
     margin-left: 15%;
     margin-right: 15%;
 }
 
-.note-title {
+.assignment-title {
     font-weight: bold;
 }
 
-.view-note {
+.view-assignment {
     background: #007bff;
     color: white;
     border: none;
@@ -150,7 +150,7 @@ section {
     margin-left: auto;
 }
 
-.note-details {
+.assignment-details {
     flex-grow: 1;
     padding: 0 15px;
 }
@@ -182,7 +182,7 @@ section {
     background-color: #0056b3;
 }
 
-.view-note:hover {
+.view-assignment:hover {
     background: #0056b3;
 }
 
@@ -194,7 +194,7 @@ footer {
 }
 
 @media (max-width: 768px) {
-    .notes-form, .notes-list {
+    .assignment-form, .assignment-list {
         width: 90%;
     }
 }

@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ClassLinker - Attendance Sheet</title>
     <link rel="stylesheet" href="attendance.css">
-    <script src="attendance_sheet.js" defer></script>
+    <script src="attendance_sheet-student.js" defer></script>
 </head>
 <body>
     <header>
         <h1>ClassLinker</h1>
     </header>
-    <div class="heading"><h2>Attendance Sheet (<span id="clsDetails"></span>)</h2></div>
+    <div class="heading"><h2>Attendance Sheet (<span id="subDetails"></span>)</h2></div>
     <section class="container">
         <div class="student-info-left">
             <div class="student-info">
@@ -27,24 +27,18 @@
                         <p>Total days</p>
                     </div>
                 </div>
-                <div class="status-button">
-                    <button id="present-button">Present</button>
-                    <button id="absent-button">Absent</button>
-                </div>
             </div>
         </div>
         <div class="attendance-right">
             <table class="attendance-table">
                 <thead>
                     <tr>
-                        <th>Scholar ID</th>
-                        <th>Pic</th>
-                        <th>Name</th>
+                        <th>Sr No.</th>
+                        <th>Date</th>
                         <th>Status</th>
-                        <th>Action</th>
                     </tr>
                 </thead>
-                <tbody id="student-list">
+                <tbody id="attendance-list">
 
                 </tbody>
             </table>
