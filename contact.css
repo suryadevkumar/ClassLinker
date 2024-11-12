@@ -1,0 +1,160 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+html, body {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(to right, #ffecd2, #fcb69f);
+    /* background-color: #f0f4f8; */
+    color: #333;
+}
+header {
+    background: #ff6f61;
+    color: #fff;
+    padding: 1rem 0;
+}
+
+header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    margin-left: 1rem;
+}
+
+header nav ul {
+    display: flex;
+    list-style: none;
+    margin-right: 1rem;
+}
+
+header nav ul li {
+    margin-left: 1rem;
+}
+
+header nav ul li a {
+    color: #fff;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+}
+
+header nav ul li a:hover {
+    background: #ff8364;
+    border-radius: 5px;
+}
+
+span img{
+    border: 1px solid black;
+    border-radius: 50%;
+    width: 23px;
+    height: 15px;
+    padding: 0.5px;
+    cursor: pointer;
+}
+.navbar ul li a:hover{
+    color: rgb(133, 198, 176);
+    
+}
+.container {
+    /* max-width: 1200px; */
+    margin: 0 auto;
+    padding: 10px;
+    
+}
+
+.contact {
+    display: flex;
+    justify-content: space-around;
+}
+.profile {
+    /* background-color: #1e1e50; */
+    background-color: white;
+    border-radius: 20px;
+    padding: 20px;
+    width: 250px;
+    text-align: center;
+    margin: 20px;
+    position: relative;
+    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.profile img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    /* border: 3px solid #00cccc; */
+}
+main{
+    flex: 1;
+}
+.name h2 {
+    font-size: 24px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+.name p {
+    color: #a5a5c3;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.contact{
+    display: flex;
+}
+.profile .contact-icon {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin: 15px 0;
+}
+
+.contact-icon .image img {
+    width: 30px;
+    height: 30px;
+    transition: 0.3s;
+}
+#image{
+    background-image: url("linkedin.png");
+}
+.contact-icon .image img:hover {
+    transform: scale(1.1);
+}
+section {
+    flex: 1; /* This makes the main content take up all available space */
+}
+
+/* Button styling */
+.Button button {
+    background-color: #94e5e5;
+    border: none;
+    color: rgb(100, 21, 21);
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.button button:hover {
+    background-color: #009999;
+}
+
+footer {
+    background: #ff6f61;
+    padding: 1rem 2rem;
+    
+}
+footer p{
+    font-size: 14px;
+}
+ 
+ 

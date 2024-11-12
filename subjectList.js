@@ -48,13 +48,13 @@ function addSubject() {
     teacherDropdown.innerHTML = `<option value="invalid">Select Teacher</option>
                                 <option value="">Not Available</option>`;
 
-    fetch('/teacherList')
+    fetch('/getTeacherList')
     .then(response => response.json())
     .then(teachers => {
         teachers.forEach(teacher => {
             const option = document.createElement('option');
             option.value = teacher[0];
-            option.textContent = teacher[1];
+            option.textContent = teacher[2];
             teacherDropdown.appendChild(option);
         });
     });
@@ -126,13 +126,13 @@ function editSubject(sub_id, sub_name, tch_id) {
     teacherDropdown.innerHTML = `<option value="invalid">Select Teacher</option>
                                 <option value="">Not Available</option>`;
 
-    fetch('/teacherList')
+    fetch('/getTeacherList')
     .then(response => response.json())
     .then(teachers => {
         teachers.forEach(teacher => {
             const option = document.createElement('option');
             option.value = teacher[0];
-            option.textContent = teacher[1];
+            option.textContent = teacher[2];
             teacherDropdown.appendChild(option);
         });
         if(tch_id!='null')

@@ -40,8 +40,8 @@ window.onload = function() {
 function uploadNotes(event) {
     event.preventDefault();
 
-    const title = document.getElementById('noteTitle').value;
-    const fileInput = document.getElementById('noteFile');
+    const title = document.getElementById('notesTitle').value;
+    const fileInput = document.getElementById('notesFile');
     const file = fileInput.files[0];
 
     if (!title || !file) {
@@ -52,8 +52,8 @@ function uploadNotes(event) {
     const subId = sessionStorage.getItem('sub_id'); 
 
     const formData = new FormData();
-    formData.append('noteTitle', title);
-    formData.append('noteFile', file);
+    formData.append('notesTitle', title);
+    formData.append('notesFile', file);
     formData.append('sub_id', subId);
 
     fetch('/uploadNotes', {
@@ -93,26 +93,26 @@ function DeleteNote(noteId) {
 }
 
 //function to download note
-function downloadNote(noteId) {
-    fetch(`/downloadNote/${noteId}`, {
-        method: 'GET',
-    })
-    .then(response => {
-        if (response.ok) {
-            return response.blob();
-        } else {
-            throw new Error('Error downloading the note');
-        }
-    })
-    .then(blob => {
-        const link = document.createElement('a');
-        const url = window.URL.createObjectURL(blob);
-        link.href = url;
-        link.download = `note_${noteId}`;
-        link.click();
-        window.URL.revokeObjectURL(url);
-    })
-    .catch(error => {
-        console.error('Error downloading note:', error);
-    });
-}
+// function downloadNote(noteId) {
+//     fetch(`/downloadNote/${noteId}`, {
+//         method: 'GET',
+//     })
+//     .then(response => {
+//         if (response.ok) {
+//             return response.blob();
+//         } else {
+//             throw new Error('Error downloading the note');
+//         }
+//     })
+//     .then(blob => {
+//         const link = document.createElement('a');
+//         const url = window.URL.createObjectURL(blob);
+//         link.href = url;
+//         link.download = `note_${noteId}`;
+//         link.click();
+//         window.URL.revokeObjectURL(url);
+//     })
+//     .catch(error => {
+//         console.error('Error downloading note:', error);
+//     });
+// }

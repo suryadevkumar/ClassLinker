@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Notes - ClassLinker</title>
     <link rel="stylesheet" href="notes.css">
-    <script src="stduent-notes.js" defer></script>
+    <script src="notes.js" defer></script>
 </head>
 <body>
     <header>
@@ -15,7 +15,7 @@
                 <ul>
                     <li><a href="index.html">Home</a></li>
                     <li><a href="#about">About</a></li>
-                    <li><a href="#contact">Contact</a></li>
+                    <li><a href="contact.html">Contact</a></li>
                 </ul>
             </nav>
         </div>
@@ -23,7 +23,15 @@
 
     <section id="notes-section">
         <div class="container">
-            <h2>Subject: <span id="sub_name"></span></h2>
+            <div class="notes-form">
+                <h2>Upload notes</h2>
+                <form id="uploadForm">
+                    <input type="text" id="notesTitle" placeholder="Enter notes title" required>
+                    <input type="file" id="notesFile" accept=".pdf, .docx, .txt, .jpeg, .jpg" required>
+                    <button type="submit" class="upload-button" onclick="uploadNotes(event)">Upload Notes</button>
+                </form>
+            </div>
+
             <div class="notes-list" id="notesList">
             </div>
         </div>

@@ -1701,9 +1701,9 @@ app.post('/getNotesList', async (req, res) => {
 });
 
 //function to upload notes
-app.post('/uploadNotes', upload.single('noteFile'), async (req, res) => {
-    const { noteTitle, sub_id } = req.body;
-    const noteFile = req.file?.buffer;
+app.post('/uploadNotes', upload.single('notesFile'), async (req, res) => {
+    const { notesTitle, sub_id } = req.body;
+    const notesFile = req.file?.buffer;
 
     let connection;
 
@@ -1712,9 +1712,9 @@ app.post('/uploadNotes', upload.single('noteFile'), async (req, res) => {
 
         const result = await connection.execute(
             `INSERT INTO notes (notes_id, notes_name, notes_file, sub_id) 
-             VALUES (notes_id_seq.NEXTVAL, :noteTitle, :noteFile, :sub_id)`, {
-            noteTitle: noteTitle,
-            noteFile: { val: noteFile, type: oracledb.BLOB }, 
+             VALUES (notes_id_seq.NEXTVAL, :notesTitle, :notesFile, :sub_id)`, {
+            notesTitle: notesTitle,
+            notesFile: { val: notesFile, type: oracledb.BLOB }, 
             sub_id: sub_id
         }, { autoCommit: true });
 
@@ -1733,48 +1733,48 @@ app.post('/uploadNotes', upload.single('noteFile'), async (req, res) => {
 });
 
 //download notes
-app.get('/downloadNote/:noteId', async (req, res) => {
-    const { noteId } = req.params;
-    let connection;
+// app.get('/downloadNote/:noteId', async (req, res) => {
+//     const { noteId } = req.params;
+//     let connection;
 
-    try {
-        connection = await oracledb.getConnection(dbConfig);
+//     try {
+//         connection = await oracledb.getConnection(dbConfig);
 
-        const result = await connection.execute(
-            `SELECT notes_name, notes_file FROM notes WHERE notes_id = :noteId`,
-            { noteId: noteId }
-        );
+//         const result = await connection.execute(
+//             `SELECT notes_name, notes_file FROM notes WHERE notes_id = :noteId`,
+//             { noteId: noteId }
+//         );
 
-        if (result.rows.length === 0) {
-            res.status(404).send('Note not found');
-            return;
-        }
+//         if (result.rows.length === 0) {
+//             res.status(404).send('Note not found');
+//             return;
+//         }
 
-        const note = result.rows[0];
-        const fileName = note[0];
-        const fileData = note[1];
+//         const note = result.rows[0];
+//         const fileName = note[0];
+//         const fileData = note[1];
 
-        if (fileData && fileData.length > 0) {
-            res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
-            res.setHeader('Content-Type', 'application/octet-stream');
+//         if (fileData && fileData.length > 0) {
+//             res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
+//             res.setHeader('Content-Type', 'application/octet-stream');
 
-            res.send(fileData);
-        } else {
-            res.status(500).send('File data is empty or corrupted');
-        }
-    } catch (err) {
-        console.error('Error downloading note:', err);
-        res.status(500).send('Internal server error');
-    } finally {
-        if (connection) {
-            try {
-                await connection.close();
-            } catch (err) {
-                console.error(err);
-            }
-        }
-    }
-});
+//             res.send(fileData);
+//         } else {
+//             res.status(500).send('File data is empty or corrupted');
+//         }
+//     } catch (err) {
+//         console.error('Error downloading note:', err);
+//         res.status(500).send('Internal server error');
+//     } finally {
+//         if (connection) {
+//             try {
+//                 await connection.close();
+//             } catch (err) {
+//                 console.error(err);
+//             }
+//         }
+//     }
+// });
 
 //delete notes
 app.delete('/deleteNote/:noteId', async (req, res) => {
@@ -2011,7 +2011,6 @@ app.post('/getAttendanceDetails', async (req, res) => {
 //function to load chats
 app.post('/getchats', async (req, res) => {
     const {sub_id}=req.body;
-    console.log(sub_id);
     let connection;
     try {
         connection = await oracledb.getConnection(dbConfig);
