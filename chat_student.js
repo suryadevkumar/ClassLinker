@@ -6,7 +6,7 @@ let messageInput='';
 window.onload=function(){
     chatBox = document.getElementById('chat-box');
     sub_id=sessionStorage.getItem('sub_id');
-    user_id=sessionStorage.getItem('user_id');
+    user_id=sessionStorage.getItem('user_id1');
     messageInput = document.getElementById('message');
     getMessages(sub_id);
 }
@@ -14,7 +14,7 @@ window.onload=function(){
 //function to get message
 function getMessages(sub_id){
     try{
-        fetch('/getchats',{
+        fetch('/getchats1',{
             method: 'POST',
             headers: {'content-type':'application/json'},
             body: JSON.stringify({sub_id})
@@ -44,11 +44,11 @@ function getMessages(sub_id){
 //     }
 // });
 
-// Function to send a new teacher message
+// Function to send a new student message
 // async function sendMessage() {
 //     const message = messageInput.value.trim();
 //     try {
-//         const response = await fetch('/sendMessage', {
+//         const response = await fetch('/sendMessage1', {
 //             method: 'POST',
 //             headers: { 'Content-Type': 'application/json' },
 //             body: JSON.stringify({ sub_id, message })
@@ -58,12 +58,6 @@ function getMessages(sub_id){
 //             messageInput.value = '';
 //             getMessages();
 //             window.location.reload();
-//             const chatWindow = window.open('chat_student.html', '_blank');
-//             if (chatWindow) {
-//                 chatWindow.onload = () => {
-//                     chatWindow.location.reload();
-//                 };
-//             }
 //         } else {
 //         console.error("Failed to send message.");
 //     }
@@ -72,12 +66,12 @@ function getMessages(sub_id){
 //     }
 // }
 
-let chatStudentWindow = null;
+let chatWindow = null;
 
 async function sendMessage() {
     const message = messageInput.value.trim();
     try {
-        const response = await fetch('/sendMessage', {
+        const response = await fetch('/sendMessage1', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ sub_id, message })
@@ -90,8 +84,8 @@ async function sendMessage() {
             setTimeout(function() {
                 window.location.reload();
             }, 100);
-            if (chatStudentWindow && !chatStudentWindow.closed) {
-                chatStudentWindow.location.reload();
+            if (chatWindow && !chatWindow.closed) {
+                chatWindow.location.reload();
             }
         } else {
             console.error("Failed to send message.");
@@ -100,4 +94,3 @@ async function sendMessage() {
         console.error("Error sending message:", error);
     }
 }
-

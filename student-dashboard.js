@@ -8,7 +8,7 @@ window.onload= function(){
             for (let i = 0; i < verify.length; i++) {
                 verify[i].style.display = 'block';
             }
-            sessionStorage.setItem('user_id', data.std_id);
+            sessionStorage.setItem('user_id1', data.std_id);
             document.getElementById('stdName').innerHTML=data.std_name;
             document.getElementById('schId').innerHTML=data.sch_id;
             document.getElementById('stdEmail').innerHTML=data.std_email;
@@ -216,7 +216,7 @@ function chat(event){
     sessionStorage.setItem('sub_name', sub_name);
     const modal = document.getElementById('subSelectChat');
     modal.style.display = 'none';
-    window.location.href="chat.html";
+    window.location.href="chat_student.html";
 }
 
 // Close modal function

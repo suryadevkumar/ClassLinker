@@ -1183,8 +1183,8 @@ app.post('/studentLogin',async (req,res)=>{
 //function for student dashboard data fetch
 let idcc_id1=0;
 let std_id=0;
-let userID=0;
-let userName='';
+let userID1=0;
+let userName1='';
 app.get('/studentDetailsFetch', async (req, res) => {
     let connection;
     try {
@@ -1197,8 +1197,8 @@ app.get('/studentDetailsFetch', async (req, res) => {
         const [stdId, stdName, schid, stdEmail, stdMobile, stdPic, idcc, verified] = result.rows[0];
         idcc_id1=idcc;
         std_id=stdId;
-        userID=stdId;
-        userName=stdName;
+        userID1=stdId;
+        userName1=stdName;
         const result1 = await connection.execute(
             `SELECT ins_name, dep_name, crs_name, cls_name, section FROM class_view WHERE idcc_id = :idcc`,
             { idcc: idcc }
@@ -1391,6 +1391,8 @@ app.post('/teacherLogin',async (req,res)=>{
 
 //function for teacher dashboard data fetch
 let teacher_id=0;
+let userID=0;
+let userName='';
 app.get('/teacherDetailsFetch', async (req, res) => {
     let connection;
     try {
@@ -2043,6 +2045,56 @@ app.post('/sendMessage', async (req, res) => {
             `INSERT INTO chat (chat_id, user_id, user_name, sub_id, message, time) VALUES 
             (chat_id_seq.NEXTVAL,:userID, :userName, :sub_id, :message, SYSTIMESTAMP)`,
             {userID, userName, sub_id, message},
+            { autoCommit: true });
+        res.send('true');
+    } catch (err) {
+        console.error(err);
+    } finally {
+        if (connection) {
+            try {
+                await connection.close();
+            } catch (err) {
+                console.error("Error closing connection:", err);
+            }
+        }
+    }
+});
+
+//function to load chats student
+app.post('/getchats1', async (req, res) => {
+    const {sub_id}=req.body;
+    let connection;
+    try {
+        connection = await oracledb.getConnection(dbConfig);
+        const result = await connection.execute(`
+            SELECT user_id, user_name, message,TO_CHAR(time, 'DD-MM-YYYY HH:MI AM') AS time FROM chat WHERE sub_id=:sub_id order by chat_id`,
+        {sub_id: sub_id});
+        res.json(result.rows);
+    } catch (err) {
+        console.error(err);
+    } finally {
+        if (connection) {
+            try {
+                await connection.close();
+            } catch (err) {
+                console.error(err);
+            }
+        }
+    }
+});
+
+//function to send message student
+app.post('/sendMessage1', async (req, res) => {
+    const {sub_id, message} = req.body;
+    let connection;
+
+    try {
+        connection = await oracledb.getConnection(dbConfig);
+
+        const result=await connection.execute(
+            `INSERT INTO chat (chat_id, user_id, user_name, sub_id, message, time) VALUES 
+            (chat_id_seq.NEXTVAL,:userID1, :userName1, :sub_id, :message, SYSTIMESTAMP)`,
+            {userID1, userName1, sub_id, message},
             { autoCommit: true });
         res.send('true');
     } catch (err) {
