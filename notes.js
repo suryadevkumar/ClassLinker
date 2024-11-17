@@ -72,6 +72,36 @@ function uploadNotes(event) {
     });
 }
 
+//function to download note
+function downloadNote(noteId) {
+    fetch(`/downloadNote/${noteId}`, {
+        method: 'GET',
+    })
+    .then(response => {
+        if (response.ok) {
+            const contentDisposition = response.headers.get('Content-Disposition');
+            const fileName = contentDisposition
+                ? contentDisposition.split('filename=')[1].replace(/"/g, '')
+                : `note_${noteId}`;
+            
+            return response.blob().then(blob => ({ blob, fileName }));  // Return blob and filename together
+        } else {
+            throw new Error('Error downloading the note');
+        }
+    })
+    .then(({ blob, fileName }) => {
+        const link = document.createElement('a');
+        const url = window.URL.createObjectURL(blob);
+        link.href = url;
+        link.download = fileName;
+        link.click();
+        window.URL.revokeObjectURL(url);
+    })
+    .catch(error => {
+        console.error('Error downloading note:', error);
+    });
+}
+
 //delete notes
 function DeleteNote(noteId) {
     if (confirm('Are you sure you want to delete this note?')) {
@@ -91,28 +121,3 @@ function DeleteNote(noteId) {
         });
     }
 }
-
-//function to download note
-// function downloadNote(noteId) {
-//     fetch(`/downloadNote/${noteId}`, {
-//         method: 'GET',
-//     })
-//     .then(response => {
-//         if (response.ok) {
-//             return response.blob();
-//         } else {
-//             throw new Error('Error downloading the note');
-//         }
-//     })
-//     .then(blob => {
-//         const link = document.createElement('a');
-//         const url = window.URL.createObjectURL(blob);
-//         link.href = url;
-//         link.download = `note_${noteId}`;
-//         link.click();
-//         window.URL.revokeObjectURL(url);
-//     })
-//     .catch(error => {
-//         console.error('Error downloading note:', error);
-//     });
-// }

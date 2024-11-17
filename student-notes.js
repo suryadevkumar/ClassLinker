@@ -43,16 +43,21 @@ function downloadNote(noteId) {
     })
     .then(response => {
         if (response.ok) {
-            return response.blob();
+            const contentDisposition = response.headers.get('Content-Disposition');
+            const fileName = contentDisposition
+                ? contentDisposition.split('filename=')[1].replace(/"/g, '')
+                : `note_${noteId}`;
+            
+            return response.blob().then(blob => ({ blob, fileName }));  // Return blob and filename together
         } else {
             throw new Error('Error downloading the note');
         }
     })
-    .then(blob => {
+    .then(({ blob, fileName }) => {
         const link = document.createElement('a');
         const url = window.URL.createObjectURL(blob);
         link.href = url;
-        link.download = `note_${noteId}`;
+        link.download = fileName;
         link.click();
         window.URL.revokeObjectURL(url);
     })

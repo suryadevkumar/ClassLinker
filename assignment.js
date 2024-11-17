@@ -25,8 +25,8 @@ window.onload = function() {
                 <div class="assignment-details">
                     <h3>${assignment[1]}</h3>
                 </div>
-                <button class="view-button" onclick="downloadassignment(${assignment[0]})">View</button>
-                <button class="delete-button" onclick="Deleteassignment(${assignment[0]})">Delete</button>
+                <button class="view-button" onclick="downloadAssignment(${assignment[0]})">View</button>
+                <button class="delete-button" onclick="deleteAssignment(${assignment[0]})">Delete</button>
             `;
             assignmentContainer.appendChild(assignmentCard);
         });
@@ -73,7 +73,7 @@ function uploadAssignment(event) {
 }
 
 //delete assignment
-function Deleteassignment(assignmentId) {
+function deleteAssignment(assignmentId) {
     if (confirm('Are you sure you want to delete this assignment?')) {
         fetch(`/deleteAssignment/${assignmentId}`, {
             method: 'DELETE',
@@ -93,26 +93,31 @@ function Deleteassignment(assignmentId) {
 }
 
 //function to download assignment
-// function downloadassignment(assignmentId) {
-//     fetch(`/downloadassignment/${assignmentId}`, {
-//         method: 'GET',
-//     })
-//     .then(response => {
-//         if (response.ok) {
-//             return response.blob();
-//         } else {
-//             throw new Error('Error downloading the assignment');
-//         }
-//     })
-//     .then(blob => {
-//         const link = document.createElement('a');
-//         const url = window.URL.createObjectURL(blob);
-//         link.href = url;
-//         link.download = `assignment_${assignmentId}`;
-//         link.click();
-//         window.URL.revokeObjectURL(url);
-//     })
-//     .catch(error => {
-//         console.error('Error downloading assignment:', error);
-//     });
-// }
+function downloadAssignment(assignId) {
+    fetch(`/downloadAssignment/${assignId}`, {
+        method: 'GET',
+    })
+    .then(response => {
+        if (response.ok) {
+            const contentDisposition = response.headers.get('Content-Disposition');
+            const fileName = contentDisposition
+                ? contentDisposition.split('filename=')[1].replace(/"/g, '')
+                : `Assignment_${assignId}`;
+            
+            return response.blob().then(blob => ({ blob, fileName }));
+        } else {
+            throw new Error('Error downloading the Assignment');
+        }
+    })
+    .then(({ blob, fileName }) => {
+        const link = document.createElement('a');
+        const url = window.URL.createObjectURL(blob);
+        link.href = url;
+        link.download = fileName;
+        link.click();
+        window.URL.revokeObjectURL(url);
+    })
+    .catch(error => {
+        console.error('Error downloading Assignment:', error);
+    });
+}

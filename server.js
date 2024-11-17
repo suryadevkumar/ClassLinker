@@ -1706,6 +1706,7 @@ app.post('/getNotesList', async (req, res) => {
 app.post('/uploadNotes', upload.single('notesFile'), async (req, res) => {
     const { notesTitle, sub_id } = req.body;
     const notesFile = req.file?.buffer;
+    const fileType = req.file?.mimetype;
 
     let connection;
 
@@ -1713,10 +1714,11 @@ app.post('/uploadNotes', upload.single('notesFile'), async (req, res) => {
         connection = await oracledb.getConnection(dbConfig);
 
         const result = await connection.execute(
-            `INSERT INTO notes (notes_id, notes_name, notes_file, sub_id) 
-             VALUES (notes_id_seq.NEXTVAL, :notesTitle, :notesFile, :sub_id)`, {
+            `INSERT INTO notes (notes_id, notes_name, notes_file, file_type, sub_id) 
+             VALUES (notes_id_seq.NEXTVAL, :notesTitle, :notesFile, :fileType, :sub_id)`, {
             notesTitle: notesTitle,
-            notesFile: { val: notesFile, type: oracledb.BLOB }, 
+            notesFile: { val: notesFile, type: oracledb.BLOB },
+            fileType: fileType,
             sub_id: sub_id
         }, { autoCommit: true });
 
@@ -1735,48 +1737,43 @@ app.post('/uploadNotes', upload.single('notesFile'), async (req, res) => {
 });
 
 //download notes
-// app.get('/downloadNote/:noteId', async (req, res) => {
-//     const { noteId } = req.params;
-//     let connection;
+app.get('/downloadNote/:noteId', async (req, res) => {
+    const { noteId } = req.params;
+    let connection;
 
-//     try {
-//         connection = await oracledb.getConnection(dbConfig);
+    try {
+        connection = await oracledb.getConnection(dbConfig);
+        const result = await connection.execute(
+            `SELECT notes_name, notes_file, file_type FROM notes WHERE notes_id = :noteId`,
+            { noteId: noteId }
+        );
 
-//         const result = await connection.execute(
-//             `SELECT notes_name, notes_file FROM notes WHERE notes_id = :noteId`,
-//             { noteId: noteId }
-//         );
+        const note = result.rows[0];
+        const fileName = note[0];
+        const fileData = note[1];
+        const fileType = note[2];
 
-//         if (result.rows.length === 0) {
-//             res.status(404).send('Note not found');
-//             return;
-//         }
-
-//         const note = result.rows[0];
-//         const fileName = note[0];
-//         const fileData = note[1];
-
-//         if (fileData && fileData.length > 0) {
-//             res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
-//             res.setHeader('Content-Type', 'application/octet-stream');
-
-//             res.send(fileData);
-//         } else {
-//             res.status(500).send('File data is empty or corrupted');
-//         }
-//     } catch (err) {
-//         console.error('Error downloading note:', err);
-//         res.status(500).send('Internal server error');
-//     } finally {
-//         if (connection) {
-//             try {
-//                 await connection.close();
-//             } catch (err) {
-//                 console.error(err);
-//             }
-//         }
-//     }
-// });
+        if (fileData) {
+            const buffer = await fileData.getData();
+            res.setHeader('Content-Type', fileType);
+            res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
+            res.send(buffer);
+        } else {
+            return res.status(500).send('File data is missing or corrupted');
+        }
+    } catch (err) {
+        console.error('Error downloading file:', err);
+        return res.status(500).send('Internal server error');
+    } finally {
+        if (connection) {
+            try {
+                await connection.close();
+            } catch (err) {
+                console.error('Error closing database connection:', err);
+            }
+        }
+    }
+});
 
 //delete notes
 app.delete('/deleteNote/:noteId', async (req, res) => {
@@ -1835,6 +1832,7 @@ app.post('/getAssignmentList', async (req, res) => {
 app.post('/uploadAssignment', upload.single('assignmentFile'), async (req, res) => {
     const { assignmentTitle, sub_id } = req.body;
     const assignmentFile = req.file?.buffer;
+    const fileType = req.file?.mimetype;
 
     let connection;
 
@@ -1842,10 +1840,11 @@ app.post('/uploadAssignment', upload.single('assignmentFile'), async (req, res) 
         connection = await oracledb.getConnection(dbConfig);
 
         const result = await connection.execute(
-            `INSERT INTO assignment (as_id, as_name, as_file, sub_id) 
-             VALUES (assignment_id_seq.NEXTVAL, :assignmentTitle, :assignmentFile, :sub_id)`, {
+            `INSERT INTO assignment (as_id, as_name, as_file, file_type, sub_id) 
+             VALUES (assignment_id_seq.NEXTVAL, :assignmentTitle, :assignmentFile, :fileType, :sub_id)`, {
             assignmentTitle: assignmentTitle,
-            assignmentFile: { val: assignmentFile, type: oracledb.BLOB }, 
+            assignmentFile: { val: assignmentFile, type: oracledb.BLOB },
+            fileType: fileType,
             sub_id: sub_id
         }, { autoCommit: true });
 
@@ -1863,49 +1862,44 @@ app.post('/uploadAssignment', upload.single('assignmentFile'), async (req, res) 
     }
 });
 
-//download notes
-// app.get('/downloadNote/:noteId', async (req, res) => {
-//     const { noteId } = req.params;
-//     let connection;
+//download assignment
+app.get('/downloadAssignment/:assignId', async (req, res) => {
+    const { assignId } = req.params;
+    let connection;
 
-//     try {
-//         connection = await oracledb.getConnection(dbConfig);
+    try {
+        connection = await oracledb.getConnection(dbConfig);
 
-//         const result = await connection.execute(
-//             `SELECT notes_name, notes_file FROM notes WHERE notes_id = :noteId`,
-//             { noteId: noteId }
-//         );
+        const result = await connection.execute(
+            `SELECT as_name, as_file, file_type FROM assignment WHERE as_id = :assignId`,
+            { assignId: assignId }
+        );
 
-//         if (result.rows.length === 0) {
-//             res.status(404).send('Note not found');
-//             return;
-//         }
+        const assignment = result.rows[0];
+        const fileName = assignment[0];
+        const fileData = assignment[1];
+        const fileType = assignment[2];
 
-//         const note = result.rows[0];
-//         const fileName = note[0];
-//         const fileData = note[1];
-
-//         if (fileData && fileData.length > 0) {
-//             res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
-//             res.setHeader('Content-Type', 'application/octet-stream');
-
-//             res.send(fileData);
-//         } else {
-//             res.status(500).send('File data is empty or corrupted');
-//         }
-//     } catch (err) {
-//         console.error('Error downloading note:', err);
-//         res.status(500).send('Internal server error');
-//     } finally {
-//         if (connection) {
-//             try {
-//                 await connection.close();
-//             } catch (err) {
-//                 console.error(err);
-//             }
-//         }
-//     }
-// });
+        if (fileData) {
+            const buffer = Buffer.isBuffer(fileData) ? fileData : await fileData.getData();
+            res.setHeader('Content-Type', fileType);
+            res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
+            res.send(buffer);
+        } else {
+            return res.status(500).send('File data is missing or corrupted');
+        }
+    } catch (err) {
+        console.error('Error downloading file:', err);
+    } finally {
+        if (connection) {
+            try {
+                await connection.close();
+            } catch (err) {
+                console.error('Error closing database connection:', err);
+            }
+        }
+    }
+});
 
 //delete assignment
 app.delete('/deleteAssignment/:assignmentId', async (req, res) => {
