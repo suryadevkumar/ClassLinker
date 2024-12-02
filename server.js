@@ -6,9 +6,17 @@ const bodyParser = require('body-parser');
 const bcrypt=require('bcrypt');
 const nodemailer=require('nodemailer');
 const fs = require('fs');
+const session = require('express-session');
 
 const app = express();
 const upload = multer();
+
+app.use(session({
+    secret: 'yourSecretKey',
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: false, maxAge: 60 * 60 * 1000 }
+}));
 
 const dbConfig = {
     user: 'system',
@@ -29,9 +37,6 @@ function generateOTP()
 }
 let otp1='10000';
 let otp2='10000';
-let otp3='10000';
-let otp4='10000';
-let inst_id=100;
 
 const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -78,13 +83,12 @@ app.post('/checkEmailUsed',async(req,res)=>{
 })
 
 //send OTP to institute email
-let instituteMail='';
 app.post('/sendInsEmail', (req, res) => {
     let { email } = req.body;
     if (!email) {
-        email = instituteMail;
+        email = req.session.instituteMail;
     }
-    instituteMail=email;
+    req.session.instituteMail=email;
     otp1=generateOTP();
     const mailOptions = {
         from: 'suryadevkumar786786@gmail.com',
@@ -180,18 +184,18 @@ app.post('/instituteSignup',upload.single('photo'), async(req,res)=>{
 })
 
 //admin login function
-let adminMail='';
 app.post('/adminLogin',async (req,res)=>{
     const {adMail, pass}=req.body;
-    adminMail=adMail;
     let connection;
     try{
         connection=await oracledb.getConnection(dbConfig);
         const result=await connection.execute(`SELECT ins_pass FROM institute WHERE ad_email=:adMail`,{adMail: adMail});
         if(result.rows[0])
         {
-            if(await bcrypt.compare(pass,result.rows[0][0]))
-            res.send('true');
+            if(await bcrypt.compare(pass,result.rows[0][0])){
+                req.session.adminMail=adMail;
+                res.send('true');
+            }
             else
             res.send('false');
         }   
@@ -254,10 +258,9 @@ app.get('/insLogin',async (req,res)=>{
         connection=await oracledb.getConnection(dbConfig);
         const result=await connection.execute(`
             SELECT ins_name, ins_code, ins_email, ins_mobile, ad_email, ins_id FROM institute WHERE ins_email=:email`,
-            {email: instituteMail});
-            adminMail=result.rows[0][4];
-            inst_id=result.rows[0][5];
-            res.json(result.rows[0]);
+            {email: req.session.instituteMail});
+            req.session.adminMail=result.rows[0][4];
+            req.session.inst_id=result.rows[0][5];
     }
     catch(err){
         console.error(err);
@@ -283,7 +286,7 @@ app.get('/fetchAdminCredentials',async (req,res)=>{
         connection=await oracledb.getConnection(dbConfig);
         const result=await connection.execute(`
             SELECT ad_name, ad_email, ad_mobile, ad_pic FROM institute WHERE ad_email=:email`,
-            {email: adminMail});
+            {email: req.session.adminMail});
         const [adName, adEmail, adMob, adPic]=result.rows[0];
         const handleLob = (adPic) => {
             return new Promise((resolve, reject) => {
@@ -350,10 +353,8 @@ app.post('/changeAdminCredentials', upload.single('photo'), async (req, res) => 
     const updateQuery = `
         UPDATE institute 
         SET ${updateFields.join(', ')} 
-        WHERE ins_email = '${instituteMail}'
+        WHERE ins_email = '${req.session.instituteMail}'
     `;
-    console.log(adminPic);
-    console.log(updateQuery);
     
     let connection;
     try {
@@ -385,11 +386,11 @@ app.get('/adminDetailsFetch', async (req, res) => {
         connection = await oracledb.getConnection(dbConfig);
         const result = await connection.execute(
             `SELECT ad_name, ins_name, ad_email, ad_mobile, ad_pic, ins_id FROM institute WHERE ad_email = :email`,
-            { email: adminMail }
+            { email: req.session.adminMail }
         );
 
         const [adName, insName, adEmail, adMobile, adPic, insId] = result.rows[0];
-        inst_id=insId;
+        req.session.inst_id=insId;
 
         const handleLob = (adPic) => {
             return new Promise((resolve, reject) => {
@@ -441,7 +442,7 @@ app.get('/getDepartments', async (req, res) => {
         connection = await oracledb.getConnection(dbConfig);
         const result = await connection.execute(
             `SELECT DISTINCT dep_id AS id, dep_name AS name FROM class_view WHERE ins_id = :inst_id`,
-            { inst_id }
+            { inst_id: req.session.inst_id }
         );
         res.json(result.rows);
     } catch (err) {
@@ -546,11 +547,10 @@ app.post('/addClass', upload.none(), async (req, res) => {
         } else {
             crs_id = course;
         }
-        console.log(dep_id,crs_id,inst_id);
         await connection.execute(`
             INSERT INTO idcc (idcc_id, ins_id, dep_id, crs_id, cls_id)
             VALUES (idcc_id_seq.nextVal, :inst_id, :dep_id, :crs_id, cls_id_seq.currVal)
-        `, { inst_id, dep_id, crs_id }, { autoCommit: true });
+        `, { inst_id: req.session.inst_id, dep_id, crs_id }, { autoCommit: true });
 
         res.send("Class Added Successfully!");
     } catch (err) {
@@ -570,7 +570,7 @@ app.post('/addClass', upload.none(), async (req, res) => {
 //function to show class list
 app.post('/getClassList',async(req,res)=>{
     const {dep, crs, cls}=req.body;
-    let condition=`ins_id=${inst_id}`;
+    let condition=`ins_id=${req.session.inst_id}`;
     if(dep)
     {
         condition+=` AND dep_id= ${dep}`;
@@ -728,7 +728,7 @@ app.post('/deleteSubject', async(req, res)=>{
 //function to show student list
 app.post('/getStudentList',async(req,res)=>{
     const {dep, crs, cls}=req.body;
-    let condition=`ins_id=${inst_id}`;
+    let condition=`ins_id=${req.session.inst_id}`;
     if(dep)
     {
         condition+=` AND dep_id= ${dep}`;
@@ -748,7 +748,7 @@ app.post('/getStudentList',async(req,res)=>{
             SELECT DISTINCT sch_id, std_name, dep_name, crs_name, cls_name FROM student_view 
             WHERE ins_id = :ins_id AND dep_id = :dep AND crs_id = :crs AND cls_id = :cls AND verified=1
             ORDER BY sch_id ASC
-        `, { ins_id: inst_id, dep: dep, crs: crs, cls: cls });        
+        `, { ins_id: req.session.inst_id, dep: dep, crs: crs, cls: cls });        
         res.json(result.rows);
     } catch (err) {
         console.error(err);
@@ -771,7 +771,7 @@ app.get('/getTeacherList',async(req,res)=>{
         connection = await oracledb.getConnection(dbConfig);
 
         const result = await connection.execute(`
-            SELECT DISTINCT tch_id, tch_code, tch_name FROM teacher WHERE ins_id = :ins_id`, { ins_id: inst_id });        
+            SELECT DISTINCT tch_id, tch_code, tch_name FROM teacher WHERE ins_id = :ins_id`, { ins_id: req.session.inst_id });        
         res.json(result.rows);
     } catch (err) {
         console.error(err);
@@ -793,7 +793,7 @@ app.get('/teacherUnverifiedList', async (req, res) => {
         connection = await oracledb.getConnection(dbConfig);
         const result = await connection.execute(
             `SELECT tch_id, tch_name, tch_pic FROM teacher WHERE ins_id = :inst_id AND verified = 0`,
-            { inst_id: inst_id }
+            { inst_id: req.session.inst_id }
         );
 
         const rows = result.rows;
@@ -852,7 +852,7 @@ app.get('/studentUnverifiedList', async (req, res) => {
         connection = await oracledb.getConnection(dbConfig);
         const result = await connection.execute(
             `SELECT std_id, std_name, std_pic FROM student_view WHERE ins_id=:inst_id AND verified = 0`,
-            {inst_id: inst_id});
+            {inst_id: res.session.inst_id});
 
         const rows = result.rows;
 
@@ -1146,18 +1146,17 @@ app.post('/studentSignup', upload.fields([{ name: 'photo' }, { name: 'receipt' }
 });
 
 //function to student login
-let studentMail='';
 app.post('/studentLogin',async (req,res)=>{
     const {stdMail, pass}=req.body;
-    studentMail=stdMail;
     let connection;
     try{
         connection=await oracledb.getConnection(dbConfig);
         const result=await connection.execute(`SELECT std_pass FROM student WHERE std_email=:stdMail`,{stdMail: stdMail});
-        if(result.rows[0])
-        {
-            if(await bcrypt.compare(pass,result.rows[0][0]))
-            res.send('true');
+        if(result.rows[0]){
+            if(await bcrypt.compare(pass,result.rows[0][0])){
+                req.session.studentMail = stdMail;
+                res.send('true');
+            }
             else
             res.send('false');
         }   
@@ -1181,24 +1180,20 @@ app.post('/studentLogin',async (req,res)=>{
 })
 
 //function for student dashboard data fetch
-let idcc_id1=0;
-let std_id=0;
-let userID1=0;
-let userName1='';
 app.get('/studentDetailsFetch', async (req, res) => {
     let connection;
     try {
         connection = await oracledb.getConnection(dbConfig);
         const result = await connection.execute(
             `SELECT std_id, std_name, sch_id, std_email, std_mobile, std_pic, idcc_id, verified FROM student WHERE std_email = :email`,
-            { email: studentMail }
+            { email: req.session.studentMail }
         );
         
         const [stdId, stdName, schid, stdEmail, stdMobile, stdPic, idcc, verified] = result.rows[0];
-        idcc_id1=idcc;
-        std_id=stdId;
-        userID1=stdId;
-        userName1=stdName;
+        req.session.idcc_id1 = idcc;
+        req.session.std_id = stdId;
+        req.session.userID1 = stdId;
+        req.session.userName1 = stdName;
         const result1 = await connection.execute(
             `SELECT ins_name, dep_name, crs_name, cls_name, section FROM class_view WHERE idcc_id = :idcc`,
             { idcc: idcc }
@@ -1355,10 +1350,9 @@ app.post('/teacherSignup',upload.single('photo'), async(req,res)=>{
 })
 
 //function to teacher login
-let teacherMail='';
 app.post('/teacherLogin',async (req,res)=>{
     const {tchMail, pass}=req.body;
-    teacherMail=tchMail;
+    req.session.teacherMail=tchMail;
     let connection;
     try{
         connection=await oracledb.getConnection(dbConfig);
@@ -1390,22 +1384,19 @@ app.post('/teacherLogin',async (req,res)=>{
 })
 
 //function for teacher dashboard data fetch
-let teacher_id=0;
-let userID=0;
-let userName='';
 app.get('/teacherDetailsFetch', async (req, res) => {
     let connection;
     try {
         connection = await oracledb.getConnection(dbConfig);
         const result = await connection.execute(
             `SELECT tch_id, tch_name, tch_code, tch_email, tch_mobile, tch_pic, ins_id, verified FROM teacher WHERE tch_email = :email`,
-            { email: teacherMail }
+            { email: req.session.teacherMail }
         );
         
         const [tch_id, tchName, tchId, tchEmail, tchMobile, tchPic, insId, verified] = result.rows[0];
-        teacher_id=tch_id;
-        userID=tch_id;
-        userName=tchName;
+        req.session.teacher_id=tch_id;
+        req.session.userID=tch_id;
+        req.session.userName=tchName;
         const result1 = await connection.execute(
             `SELECT ins_name FROM institute WHERE ins_id = :insId`,
             { insId: insId }
@@ -1464,7 +1455,7 @@ app.get('/subList',async(req, res)=>{
     let connection;
     try{
         connection=await oracledb.getConnection(dbConfig);
-        const result=await connection.execute(`SELECT sub_id, dep_name, crs_name, cls_name, sub_name FROM subject_view WHERE tch_id=:tchId`,{tchId: teacher_id});
+        const result=await connection.execute(`SELECT sub_id, dep_name, crs_name, cls_name, sub_name FROM subject_view WHERE tch_id=:tchId`,{tchId: req.session.teacher_id});
         res.json(result.rows);
     }
     catch(err){
@@ -1484,14 +1475,13 @@ app.get('/subList',async(req, res)=>{
 })
 
 //function to find subject details
-let idcc_id=0;
 app.post('/getSubDetails',async(req,res)=>{
     const {sub_id}=req.body;
     let connection;
     try{
         connection=await oracledb.getConnection(dbConfig);
         const result=await connection.execute(`SELECT dep_name, crs_name, cls_name, sub_name, idcc_id FROM subject_view WHERE sub_id=:subId`,{subId: sub_id});
-        idcc_id=result.rows[0][4];
+        req.session.idcc_id=result.rows[0][4];
         res.json(result.rows);
     }
     catch(err){
@@ -1515,7 +1505,7 @@ app.get('/getStudentDetails',async(req,res)=>{
     let connection;
     try{
         connection=await oracledb.getConnection(dbConfig);
-        const result=await connection.execute(`SELECT std_id, sch_id, std_name, std_pic FROM student WHERE verified=1 AND idcc_id=:idccId`,{idccId: idcc_id});
+        const result=await connection.execute(`SELECT std_id, sch_id, std_name, std_pic FROM student WHERE verified=1 AND idcc_id=:idccId`,{idccId: req.session.idcc_id});
         const rows = result.rows;
 
         const handleLob = (lob) => {
@@ -1933,7 +1923,7 @@ app.get('/subList1',async(req, res)=>{
     let connection;
     try{
         connection=await oracledb.getConnection(dbConfig);
-        const result=await connection.execute(`SELECT sub_id, sub_name FROM subject WHERE idcc_id=:idccId`,{idccId: idcc_id1});
+        const result=await connection.execute(`SELECT sub_id, sub_name FROM subject WHERE idcc_id=:idccId`,{idccId: req.session.idcc_id1});
         res.json(result.rows);
     }
     catch(err){
@@ -1963,14 +1953,14 @@ app.post('/getAttendanceDetails', async (req, res) => {
             `SELECT TO_CHAR(ATTEND_DATE, 'DD/MM/YYYY') AS attend_date, attend_status 
             FROM attendance 
             WHERE sub_id = :sub_id AND std_id= :std_id`,
-            { sub_id: sub_id, std_id: std_id }
+            { sub_id: sub_id, std_id: req.session.std_id }
         );
 
         const totalClassesResult = await connection.execute(
             `SELECT COUNT(*) AS total_classes 
             FROM attendance 
             WHERE sub_id = :sub_id AND std_id= :std_id`,
-            { sub_id: sub_id, std_id: std_id }
+            { sub_id: sub_id, std_id: req.session.std_id }
         );
         
         const totalPresentResult = await connection.execute(
@@ -1981,7 +1971,7 @@ app.post('/getAttendanceDetails', async (req, res) => {
             AND attend_status = 'Present'`,
             {
                 sub_id: sub_id,
-                std_id: std_id
+                std_id: req.session.std_id
             }
         );
 
@@ -2038,7 +2028,7 @@ app.post('/sendMessage', async (req, res) => {
         const result=await connection.execute(
             `INSERT INTO chat (chat_id, user_id, user_name, sub_id, message, time) VALUES 
             (chat_id_seq.NEXTVAL,:userID, :userName, :sub_id, :message, SYSTIMESTAMP)`,
-            {userID, userName, sub_id, message},
+            {userID: req.session.userID, userName: req.session.userName, sub_id, message},
             { autoCommit: true });
         res.send('true');
     } catch (err) {
@@ -2088,7 +2078,7 @@ app.post('/sendMessage1', async (req, res) => {
         const result=await connection.execute(
             `INSERT INTO chat (chat_id, user_id, user_name, sub_id, message, time) VALUES 
             (chat_id_seq.NEXTVAL,:userID1, :userName1, :sub_id, :message, SYSTIMESTAMP)`,
-            {userID1, userName1, sub_id, message},
+            {userID1: req.session.userID1, userName1: req.session.userName1, sub_id, message},
             { autoCommit: true });
         res.send('true');
     } catch (err) {
