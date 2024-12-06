@@ -1,4 +1,5 @@
 const express=require('express');
+const nodemon=require('nodemon');
 const oracledb=require('oracledb');
 const path = require('path');
 const multer = require('multer');
@@ -30,7 +31,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //file connection
 app.use(express.static(path.join(__dirname, '/')));
 
-//send OTP to mail
+//generate OTP
 function generateOTP()
 {
     return Math.floor(1000+Math.random()*9000).toString();
@@ -852,7 +853,7 @@ app.get('/studentUnverifiedList', async (req, res) => {
         connection = await oracledb.getConnection(dbConfig);
         const result = await connection.execute(
             `SELECT std_id, std_name, std_pic FROM student_view WHERE ins_id=:inst_id AND verified = 0`,
-            {inst_id: res.session.inst_id});
+            {inst_id: req.session.inst_id});
 
         const rows = result.rows;
 
