@@ -50,7 +50,7 @@ const transporter = nodemailer.createTransport({
 //institute signup
 //check email are in used or not
 app.post('/checkEmailUsed',async(req,res)=>{
-    const{instMail, adMail}=req.body;
+    const {instMail, adMail}=req.body;
     let connection;
     try{
         connection=await oracledb.getConnection(dbConfig);
@@ -220,8 +220,11 @@ app.post('/adminLogin',async (req,res)=>{
 })
 
 //institute send otp to login
-app.post('/insOTPLogin',async (req,res)=>{
-    const {insMail, pass}=req.body;
+app.post('/insLogin',async (req,res)=>{
+    let {insMail, pass}=req.body;
+    if(!insMail){
+        insMail=req.session.instituteMail;
+    }
     let connection;
     try{
         connection=await oracledb.getConnection(dbConfig);
@@ -252,8 +255,8 @@ app.post('/insOTPLogin',async (req,res)=>{
     }
 })
 
-//function for institute login data fetch
-app.get('/insLogin',async (req,res)=>{
+//function for institute data fetch
+app.get('/insDetailsFetch',async (req,res)=>{
     let connection;
     try{
         connection=await oracledb.getConnection(dbConfig);
@@ -262,6 +265,7 @@ app.get('/insLogin',async (req,res)=>{
             {email: req.session.instituteMail});
             req.session.adminMail=result.rows[0][4];
             req.session.inst_id=result.rows[0][5];
+        res.json(result.rows[0]);
     }
     catch(err){
         console.error(err);
@@ -332,6 +336,37 @@ app.get('/fetchAdminCredentials',async (req,res)=>{
         }
     }
 
+})
+
+//update/reset password for admin/institute
+app.post('/updateInsPassword',async (req,res)=>{
+    let { insMail, pass } = req.body;
+    if(!insMail){
+        insMail=req.session.instituteMail;
+    }
+    let connection;
+    const hashPass = await bcrypt.hash(pass, 10);
+    try {
+        connection = await oracledb.getConnection(dbConfig);
+
+        await connection.execute(
+            `UPDATE institute SET ins_pass= :hashpass WHERE ins_email=:insMail`,
+            {hashPass, insMail},
+            { autoCommit: true });
+
+        res.send('Password Changed Successful');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error during signup.");
+    } finally {
+        if (connection) {
+            try {
+                await connection.close();
+            } catch (err) {
+                console.error("Error closing connection:", err);
+            }
+        }
+    }
 })
 
 //save admin credentials into database
@@ -1148,7 +1183,10 @@ app.post('/studentSignup', upload.fields([{ name: 'photo' }, { name: 'receipt' }
 
 //function to student login
 app.post('/studentLogin',async (req,res)=>{
-    const {stdMail, pass}=req.body;
+    let {stdMail, pass}=req.body;
+    if(!stdMail){
+        stdMail=req.session.studentMail;
+    }
     let connection;
     try{
         connection=await oracledb.getConnection(dbConfig);
@@ -1252,6 +1290,37 @@ app.get('/studentDetailsFetch', async (req, res) => {
     }
 });
 
+//update/reset password for student
+app.post('/updateStdPassword',async (req,res)=>{
+    let { stdMail, pass } = req.body;
+    if(!stdMail){
+        stdMail=req.session.studentMail;
+    }
+    let connection;
+    const hashPass = await bcrypt.hash(pass, 10);
+    try {
+        connection = await oracledb.getConnection(dbConfig);
+
+        await connection.execute(
+            `UPDATE student SET std_pass= :hashpass WHERE std_email=:stdMail`,
+            {hashPass, stdMail},
+            { autoCommit: true });
+
+        res.send('Password Changed Successful');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error during signup.");
+    } finally {
+        if (connection) {
+            try {
+                await connection.close();
+            } catch (err) {
+                console.error("Error closing connection:", err);
+            }
+        }
+    }
+})
+
 //teacher function
 //check teacher email in used or not
 app.post('/checkTchEmailUsed',async(req,res)=>{
@@ -1352,7 +1421,10 @@ app.post('/teacherSignup',upload.single('photo'), async(req,res)=>{
 
 //function to teacher login
 app.post('/teacherLogin',async (req,res)=>{
-    const {tchMail, pass}=req.body;
+    let {tchMail, pass}=req.body;
+    if(!tchMail){
+        tchMail=req.session.teacherMail;
+    }
     req.session.teacherMail=tchMail;
     let connection;
     try{
@@ -1450,6 +1522,37 @@ app.get('/teacherDetailsFetch', async (req, res) => {
         }
     }
 });
+
+//update/reset password for teacher
+app.post('/updateTchPassword',async (req,res)=>{
+    let { tchMail, pass } = req.body;
+    if(!tchMail){
+        tchMail=req.session.teacherMail;
+    }
+    let connection;
+    const hashPass = await bcrypt.hash(pass, 10);
+    try {
+        connection = await oracledb.getConnection(dbConfig);
+
+        await connection.execute(
+            `UPDATE teacher SET tch_pass= :hashpass WHERE tch_email=:tchMail`,
+            {hashPass, tchMail},
+            { autoCommit: true });
+
+        res.send('Password Changed Successful');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error during signup.");
+    } finally {
+        if (connection) {
+            try {
+                await connection.close();
+            } catch (err) {
+                console.error("Error closing connection:", err);
+            }
+        }
+    }
+})
 
 //load subject list in select box
 app.get('/subList',async(req, res)=>{

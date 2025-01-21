@@ -1,15 +1,13 @@
 window.onload = function() {
-    const verify = document.getElementsByClassName('bound');
-    const unverify = document.getElementsByClassName('unverified');
+    const verify = document.getElementById("verified");
+    const unverify = document.getElementById('unverified');
     
     fetch('/teacherDetailsFetch')
         .then(response => response.json())
         .then(data => {
             
             if (data.verified == '1') {
-                for (let i = 0; i < verify.length; i++) {
-                    verify[i].style.display = 'block';
-                }
+                verify.style.display="block";
                 sessionStorage.setItem('user_id', data.user_id);
                 document.getElementById('tchName').innerHTML = data.tch_name;
                 document.getElementById('tchId').innerHTML = data.tch_id;
@@ -17,11 +15,8 @@ window.onload = function() {
                 document.getElementById('tchMob').innerHTML = data.tch_mobile;
                 document.getElementById('tchPic').src = `data:image/jpeg;base64,${data.tch_pic}`;
                 document.getElementById('insName').innerHTML = data.ins_name;
-            } else {
-                for (let i = 0; i < unverify.length; i++) {
-                    unverify[i].style.display = 'block';
-                }
-            }
+            } else
+                unverify.style.display = 'block';
         })
         .catch(error => console.error('Error fetching teacher details:', error));
 };

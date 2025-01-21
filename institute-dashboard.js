@@ -1,5 +1,5 @@
 window.onload = function() {
-    fetch('/insLogin')
+    fetch('/insDetailsFetch')
     .then(response=>response.json())
     .then(data=>{
         document.getElementById('insName').innerHTML=data[0];

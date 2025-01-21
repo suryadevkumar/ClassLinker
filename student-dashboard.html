@@ -22,7 +22,7 @@
         <img src="icon/sorry.png" width="200px">
     </div>
     <div class="bound" style="display: none;">
-        <section class="profile-info">
+        <div class="profile-info">
             <img id="stdPic" src="" alt="Profile Picture" class="profile-pic">
             <h2><span id="stdName"></span></h2>
             <p><b>Scholar ID:</b><span id="schId"></span></p><br>
@@ -33,23 +33,27 @@
             <p><b>Course:</b> <span id="course"></span></p><br>
             <p><b>Class:</b> <span id="class"></span></p><br>
             <p><b>Section:</b> <span id="section"></span></p>
-        </section>
+        </div>
         <div class="menu-box">
             <div class="menu">
-                <h2>Attendance</h2>
-                <img src="icon/attendance.png" height="65%" alt="attendance.jpg" onclick="subAttendanceSelect()" style="cursor: pointer;">
+                <img src="icon/attendance.png" height="98%" alt="attendance.jpg">
+                <h2 style="margin-left: 50px; padding-top: 25px; cursor: pointer;" onclick="subAttendanceSelect()">Mark Attendance</h2>
             </div>
             <div class="menu">
-                <h2>Notes</h2>
-                <img src="icon/notes.png" height="65%" alt="notes.jpg" onclick="subNotesSelect()" style="cursor: pointer;">
+                <img src="icon/notes.png" height="98%" alt="notes.jpg">
+                <h2 style="margin-left: 50px; padding-top: 25px; cursor: pointer;" onclick="subNotesSelect()">Upload Notes</h2>
             </div>
             <div class="menu">
-                <h2>Assignments</h2>
-                <img src="icon/assignment.png" height="65%" alt="Assignment.jpg" onclick="subAssignmentSelect()" style="cursor: pointer;">
+                <img src="icon/assignment.png" height="98%" alt="Assignment.jpg">
+                <h2 style="margin-left: 50px; padding-top: 25px; cursor: pointer;" onclick="subAssignmentSelect()">Assignments</h2>
             </div>
             <div class="menu">
-                <h2>Chat</h2>
-                <img src="icon/chat.png" height="65%" alt="Chat.jpg" onclick="subChatSelect()" style="cursor: pointer;">
+                <img src="icon/chat.png" height="98%" alt="Chat.jpg">
+                <h2 style="margin-left: 50px; padding-top: 25px; cursor: pointer;" onclick="subChatSelect()">Chat</h2>
+            </div>
+            <div class="menu">
+                <img src="icon/changePass.png" height="98%" alt="password.jpg">
+                <h2 style="margin-left: 50px; padding-top: 25px; cursor: pointer;"><a href="student-reset-password.html" style="text-decoration: none; color: black;">Change Password</a></h2>
             </div>
         </div>
     </div>

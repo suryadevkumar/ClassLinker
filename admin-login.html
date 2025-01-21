@@ -31,11 +31,12 @@
                         <input required type="email" placeholder="Email" class="input" id="adMail">
                     </div><br>
                     <div class="login_input">
-                        <img src="icon/lock.png" width="23px">
-                        <input required type="password" placeholder="Your Password" class="input" id="pass">
+                        <div><img src="icon/lock.png" width="23px" style="float: left;"></div>
+                        <input required type="password" placeholder="Your Password" class="input" id="pass" style="width: 81%; float: left">
+                        <img src="icon/show.png" width="23px" style="float:none; cursor: pointer;" onclick="passwordShow()" id="pass_show">
                     </div><br>
                         <a href="institute-login.html" style="color: blue; text-decoration: none;">Institute Login</a>
-                        <a href="institute-forget-pass.html" style="float: inline-end;margin-right: 5px; color: blue; text-decoration: none;">Forgot password?</a>
+                        <p onclick="passwordChange()" style="float: inline-end;margin-right: 5px; color: blue; cursor: pointer;">Forgot password?</p>
                         <br><br>
                         <button type="submit" onclick="adminLogin(event)">Log In</button><br><br>
                         Don't hava an account? <a href="institute-signup.html" style="color: blue; text-decoration: none;">Sign up</a>
