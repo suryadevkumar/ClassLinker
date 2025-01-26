@@ -97,7 +97,7 @@ app.post('/sendInsEmail', (req, res) => {
     req.session.instituteMail=email;
     otp1=generateOTP();
     const mailOptions = {
-        from: 'suryadevkumar786786@gmail.com',
+        from: process.env.EMAIL_USER,
         to: email,
         subject: 'ClassLinker Email Verification',
         text: `Welcome to ClassLinker!
@@ -109,7 +109,6 @@ app.post('/sendInsEmail', (req, res) => {
             console.error('Error:', error);
             return res.send('Error sending email. Try again later.');
         } else {
-            console.log('Email sent:', info.response);
             return res.send('OTP Sent Successfully!');
         }
     });
@@ -120,7 +119,7 @@ app.post('/sendAdEmail', (req, res) => {
     const { email } = req.body;
     otp2=generateOTP();
     const mailOptions = {
-        from: 'suryadevkumar786786@gmail.com',
+        from: process.env.EMAIL_USER,
         to: email,
         subject: 'ClassLinker Email Verification',
         text: `Welcome to ClassLinker!
@@ -132,7 +131,6 @@ app.post('/sendAdEmail', (req, res) => {
             console.error('Error:', error);
             return res.send('Error sending email. Try again later.');
         } else {
-            console.log('Email sent:', info.response);
             return res.send('OTP Sent Successfully!');
         }
     });
@@ -1115,7 +1113,7 @@ app.post('/sendStdEmail', (req, res) => {
     let { email } = req.body;
     otp1=generateOTP();
     const mailOptions = {
-        from: 'suryadevkumar786786@gmail.com',
+        from: process.env.EMAIL_USER,
         to: email,
         subject: 'ClassLinker Email Verification',
         text: `Welcome to ClassLinker!
@@ -1127,7 +1125,6 @@ app.post('/sendStdEmail', (req, res) => {
             console.error('Error:', error);
             return res.send('Error sending email. Try again later.');
         } else {
-            console.log('Email sent:', info.response);
             return res.send('OTP Sent Successfully!');
         }
     });
@@ -1363,7 +1360,7 @@ app.post('/sendTchEmail', (req, res) => {
     let { email } = req.body;
     otp2=generateOTP();
     const mailOptions = {
-        from: 'suryadevkumar786786@gmail.com',
+        from: process.env.EMAIL_USER,
         to: email,
         subject: 'ClassLinker Email Verification',
         text: `Welcome to ClassLinker!
@@ -1375,7 +1372,6 @@ app.post('/sendTchEmail', (req, res) => {
             console.error('Error:', error);
             return res.send('Error sending email. Try again later.');
         } else {
-            console.log('Email sent:', info.response);
             return res.send('OTP Sent Successfully!');
         }
     });
