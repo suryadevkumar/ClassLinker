@@ -43,10 +43,12 @@ header nav ul li a:hover {
 
 .unverified{
     margin: 0 auto;
-    padding: 25px 0;
+    margin-top: 13%;
+    margin-bottom: 13%;
+    padding: 25px;
     border-radius: 10px;
     text-align: center;
-    width: 55%;
+    width: 35%;
     background-color: #fff;
 }
 
@@ -133,6 +135,11 @@ footer {
 @media (max-width: 768px) {
     .head{
         justify-content: center;
+    }
+    .unverified{
+        width: 58%;
+        margin-top: 25%;
+        margin-bottom: 25%;
     }
     .bound{
         width: 96%;

@@ -5,14 +5,15 @@
   "main": "server.js",
   "scripts": {
     "test": "server.js",
-    "start": "node server.js",
-    "go": "nodemon server.js"
+    "start": "nodemon server.js"
   },
+  "type": "module",
   "author": "Surya",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.3",
+    "dotenv": "^16.4.7",
     "express": "^4.21.1",
     "express-session": "^1.18.1",
     "fs": "^0.0.1-security",
@@ -20,6 +21,6 @@
     "nodemailer": "^6.9.15"
   },
   "devDependencies": {
-    "nodemon": "^3.1.7"
+    "nodemon": "^3.1.9"
   }
 }

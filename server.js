@@ -1,13 +1,18 @@
-const express=require('express');
-const nodemon=require('nodemon');
-const oracledb=require('oracledb');
-const path = require('path');
-const multer = require('multer');
-const bodyParser = require('body-parser');
-const bcrypt=require('bcrypt');
-const nodemailer=require('nodemailer');
-const fs = require('fs');
-const session = require('express-session');
+import express from 'express';
+import oracledb from 'oracledb';
+import path from 'path';
+import multer from 'multer';
+import bodyParser from 'body-parser';
+import bcrypt from 'bcrypt';
+import nodemailer from 'nodemailer';
+import session from 'express-session';
+import { fileURLToPath } from 'url';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const upload = multer();
@@ -20,9 +25,9 @@ app.use(session({
 }));
 
 const dbConfig = {
-    user: 'system',
-    password: '0786',
-    connectString: 'localhost:1521/orcl'
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    connectString: process.env.DB_CONNECT_STRING
 };
 
 app.use(bodyParser.json());
@@ -42,8 +47,8 @@ let otp2='10000';
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: 'suryadevkumar786786@gmail.com',
-        pass: 'vgaj lkdh tgbx ephk'
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
     }
 });
 
