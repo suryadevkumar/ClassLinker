@@ -1,5 +1,5 @@
 window.onload = function() {
-    const verify = document.getElementById("verified");
+    const verify = document.getElementById("bound");
     const unverify = document.getElementById('unverified');
     
     fetch('/teacherDetailsFetch')
@@ -7,7 +7,7 @@ window.onload = function() {
         .then(data => {
             
             if (data.verified == '1') {
-                verify.style.display="block";
+                verify.style.display="flex";
                 sessionStorage.setItem('user_id', data.user_id);
                 document.getElementById('tchName').innerHTML = data.tch_name;
                 document.getElementById('tchId').innerHTML = data.tch_id;

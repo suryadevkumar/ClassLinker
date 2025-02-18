@@ -176,6 +176,19 @@ function nextStep() {
     }
 }
 
+//password show hide function
+function passwordShow(password, icon){
+    if(password.type=="password")
+    {
+        password.type="text";
+        icon.src="icon/hide.png"
+    }
+    else{
+        password.type="password";
+        icon.src="icon/show.png"
+    }
+}
+
 //function for previous step
 function prevStep() {
     document.getElementById('step2').style.display='none';

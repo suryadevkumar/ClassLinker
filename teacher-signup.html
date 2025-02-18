@@ -46,9 +46,15 @@
                     <lebel for="photo">Passport Size Photo:</lebel>
                     <input required type="file" id="photo" name="photo" accept="image/*" class="input" title="Upload Profile Picture" onchange="previewImage()">
                     <label for="password">Create Password:</label>
-                    <input type="password" id="pass" name="pass" class="input" placeholder="Password" oninput="passValidate()" required>
+                    <div class="pass_input">
+                        <input type="password" id="pass" name="pass" class="pinput" placeholder="Password" oninput="passValidate()" required  style="float: left">
+                        <img src="icon/show.png" width="23px" style="float:none; cursor: pointer;" onclick="passwordShow(pass, pass_show)" id="pass_show">
+                    </div>
                     <label for="CNFpassword">Confirm Password:</label>
-                    <input type="password" id="CNFpass" name="CNFpass" class="input" placeholder="Confirm Password" oninput="passValidate()" required>
+                    <div class="pass_input">
+                        <input type="password" id="CNFpass" name="CNFpass" class="pinput" placeholder="Confirm Password" oninput="passValidate()" required  style="float: left">
+                        <img src="icon/show.png" width="23px" style="float:none; cursor: pointer;" onclick="passwordShow(CNFpass, pass_show1)" id="pass_show1">
+                    </div>
                     <span id="passWarning"></span>
                     <label for="mailVerify">Verify your mail:</label>
                     <div class="otp">

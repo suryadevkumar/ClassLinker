@@ -67,6 +67,19 @@ function previewImage() {
     }
 }
 
+//password show hide function
+function passwordShow(password, icon){
+    if(password.type=="password")
+    {
+        password.type="text";
+        icon.src="icon/hide.png"
+    }
+    else{
+        password.type="password";
+        icon.src="icon/show.png"
+    }
+}
+
 //function for password validation
 function passValidate() {
     const pass = document.getElementById('pass').value;

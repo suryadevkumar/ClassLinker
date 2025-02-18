@@ -52,7 +52,7 @@ header nav ul li a:hover {
     background-color: #fff;
 }
 
-.bound{
+#bound{
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -63,6 +63,7 @@ header nav ul li a:hover {
 .profile-info {
     width: 50%;
     text-align: center;
+    margin: 20px;
     padding: 20px;
     background-color: #fff;
     border-radius: 10px;
@@ -141,8 +142,9 @@ footer {
         margin-top: 25%;
         margin-bottom: 25%;
     }
-    .bound{
+    #bound{
         width: 96%;
+        flex-direction: column;
     }
     header h1 {
         margin-bottom: 1rem;
@@ -160,6 +162,10 @@ footer {
     }
 
     .menu-box{
+        width: 100%;
+    }
+
+    .menu{
         width: 100%;
     }
 

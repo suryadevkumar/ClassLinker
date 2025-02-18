@@ -110,40 +110,56 @@ function sendAdminOTP(){
         alert('Please enter new email!');
         return;
     }
-    document.getElementById('otpLabel').style.display='block';
-    document.getElementById('otpField').style.display='block';
-    const send1=document.getElementById('send1');
-    send1.disabled=true;
-    fetch('/sendAdEmail',{
+    const instMail=email;
+    const adMail=email;
+    fetch('/checkEmailUsed',{
         method: 'POST',
         headers: {'content-type':'application/json'},
-        body: JSON.stringify({email})
+        body: JSON.stringify({instMail, adMail})
     })
     .then(response=>response.text())
     .then(data=>{
-        const popup = document.getElementById('otpPopup');
-        popup.innerHTML=`${data}`;
-        popup.classList.add('show');
-        setTimeout(function() {
-            popup.classList.remove('show');
-        }, 2000);
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
-
-    let count=59;
-    send1.innerHTML=`Resend in ${count}`;
-    timer=setInterval(() => {
-        count--;
-        send1.innerHTML = `Resend in 0:${count < 10 ? '0' : ''}${count}`;
-        if (count <= 0) {
-            clearInterval(timer);
-            if((document.getElementById('verify1').innerText)!='Verified')
-            send1.disabled = false;
-            send1.innerHTML = 'Resend';
+        if(data=='admin' || data=='institute'){
+            alert('Admin email is already in used!')
+            return;
         }
-    }, 1000);
+        else{
+            document.getElementById('otpLabel').style.display='block';
+            document.getElementById('otpField').style.display='block';
+            const send1=document.getElementById('send1');
+            send1.disabled=true;
+            fetch('/sendAdEmail',{
+                method: 'POST',
+                headers: {'content-type':'application/json'},
+                body: JSON.stringify({email})
+            })
+            .then(response=>response.text())
+            .then(data=>{
+                const popup = document.getElementById('otpPopup');
+                popup.innerHTML=`${data}`;
+                popup.classList.add('show');
+                setTimeout(function() {
+                    popup.classList.remove('show');
+                }, 2000);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+
+            let count=59;
+            send1.innerHTML=`Resend in ${count}`;
+            timer=setInterval(() => {
+                count--;
+                send1.innerHTML = `Resend in 0:${count < 10 ? '0' : ''}${count}`;
+                if (count <= 0) {
+                    clearInterval(timer);
+                    if((document.getElementById('verify1').innerText)!='Verified')
+                    send1.disabled = false;
+                    send1.innerHTML = 'Resend';
+                }
+            }, 1000);
+        }
+    })
 }
 
 //function to verify admin email otp
@@ -242,7 +258,7 @@ function validateInsOTP()
             document.getElementById('CNFupdate').style.display='block';
         }
         else{
-            document.getElementById('adOTP').value='';
+            document.getElementById('insOTP').value='';
             alert('incorrect OTP!')
         }
     })

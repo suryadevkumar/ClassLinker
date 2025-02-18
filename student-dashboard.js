@@ -1,13 +1,11 @@
 window.onload= function(){
-    const verify = document.getElementsByClassName('bound');
+    const verify = document.getElementById('bound');
     const unverify = document.getElementsByClassName('unverified');
     fetch('/studentDetailsFetch')
     .then(response=>response.json())
     .then(data=>{
         if (data.verified == '1') {
-            for (let i = 0; i < verify.length; i++) {
-                verify[i].style.display = 'block';
-            }
+            verify.style.display = 'flex';
             sessionStorage.setItem('user_id1', data.std_id);
             document.getElementById('stdName').innerHTML=data.std_name;
             document.getElementById('schId').innerHTML=data.sch_id;

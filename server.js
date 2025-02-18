@@ -43,6 +43,7 @@ function generateOTP()
 }
 let otp1='10000';
 let otp2='10000';
+let connection;
 
 const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -56,7 +57,7 @@ const transporter = nodemailer.createTransport({
 //check email are in used or not
 app.post('/checkEmailUsed',async(req,res)=>{
     const {instMail, adMail}=req.body;
-    let connection;
+    ;
     try{
         connection=await oracledb.getConnection(dbConfig);
         const result1=await connection.execute(`SELECT COUNT(ins_id) FROM institute WHERE ins_email=:gmail`,{gmail:instMail});
@@ -154,12 +155,12 @@ app.post('/verifyOTP2',(req,res)=>{
     res.send('false');
 })
 
-//institute signup function
+//institute signup Routes
 app.post('/instituteSignup',upload.single('photo'), async(req,res)=>{
     const{insName, insCode, insMob, insMail, insAddress, adName, adMob, adMail, pass}=req.body;
     const adminPic=req.file?.buffer;
     const hashPass= await bcrypt.hash(pass,10);
-    let connection;
+    ;
     try{
         connection=await oracledb.getConnection(dbConfig);
         connection.execute(
@@ -187,10 +188,10 @@ app.post('/instituteSignup',upload.single('photo'), async(req,res)=>{
     }
 })
 
-//admin login function
+//admin login Routes
 app.post('/adminLogin',async (req,res)=>{
     const {adMail, pass}=req.body;
-    let connection;
+    ;
     try{
         connection=await oracledb.getConnection(dbConfig);
         const result=await connection.execute(`SELECT ins_pass FROM institute WHERE ad_email=:adMail`,{adMail: adMail});
@@ -228,7 +229,7 @@ app.post('/insLogin',async (req,res)=>{
     if(!insMail){
         insMail=req.session.instituteMail;
     }
-    let connection;
+    ;
     try{
         connection=await oracledb.getConnection(dbConfig);
         const result=await connection.execute(`SELECT ins_pass FROM institute WHERE ins_email=:insMail`,{insMail: insMail});
@@ -258,9 +259,9 @@ app.post('/insLogin',async (req,res)=>{
     }
 })
 
-//function for institute data fetch
+//Routes for institute data fetch
 app.get('/insDetailsFetch',async (req,res)=>{
-    let connection;
+    ;
     try{
         connection=await oracledb.getConnection(dbConfig);
         const result=await connection.execute(`
@@ -287,9 +288,9 @@ app.get('/insDetailsFetch',async (req,res)=>{
 
 })
 
-//function for admin credentials data fetch
+//Routes for admin credentials data fetch
 app.get('/fetchAdminCredentials',async (req,res)=>{
-    let connection;
+    ;
     try{
         connection=await oracledb.getConnection(dbConfig);
         const result=await connection.execute(`
@@ -347,7 +348,7 @@ app.post('/updateInsPassword',async (req,res)=>{
     if(!insMail){
         insMail=req.session.instituteMail;
     }
-    let connection;
+    ;
     const hashPass = await bcrypt.hash(pass, 10);
     try {
         connection = await oracledb.getConnection(dbConfig);
@@ -395,7 +396,7 @@ app.post('/changeAdminCredentials', upload.single('photo'), async (req, res) => 
         WHERE ins_email = '${req.session.instituteMail}'
     `;
     
-    let connection;
+    ;
     try {
         connection = await oracledb.getConnection(dbConfig);
         const adPhoto = adminPic ? { adPic: { val: adminPic, type: oracledb.BLOB } } : {};
@@ -418,9 +419,9 @@ app.post('/changeAdminCredentials', upload.single('photo'), async (req, res) => 
     }
 });
 
-//function for admin login data fetch
+//Routes for admin login data fetch
 app.get('/adminDetailsFetch', async (req, res) => {
-    let connection;
+    ;
     try {
         connection = await oracledb.getConnection(dbConfig);
         const result = await connection.execute(
@@ -474,9 +475,9 @@ app.get('/adminDetailsFetch', async (req, res) => {
     }
 });
 
-//function to fetch department
+//Routes to fetch department
 app.get('/getDepartments', async (req, res) => {
-    let connection;
+    ;
     try {
         connection = await oracledb.getConnection(dbConfig);
         const result = await connection.execute(
@@ -498,10 +499,10 @@ app.get('/getDepartments', async (req, res) => {
     }
 });
 
-//function to fetch course
+//Routes to fetch course
 app.get('/getCourses', async (req, res) => {
     const { departmentId } = req.query;
-    let connection;
+    ;
     try {
         connection = await oracledb.getConnection(dbConfig);
         const result = await connection.execute(
@@ -523,10 +524,10 @@ app.get('/getCourses', async (req, res) => {
     }
 });
 
-//function to fetch class
+//Routes to fetch class
 app.get('/getClasses', async (req, res) => {
     const { courseId } = req.query;
-    let connection;
+    ;
     try {
         connection = await oracledb.getConnection(dbConfig);
         const result = await connection.execute(
@@ -548,11 +549,11 @@ app.get('/getClasses', async (req, res) => {
     }
 });
 
-//function to add new class
+//Routes to add new class
 app.post('/addClass', upload.none(), async (req, res) => {
     const { department, newDep, course, newCrs, className, sectionNum } = req.body;
     console.log(department, newDep, course, newCrs, className, sectionNum);
-    let connection;
+    ;
     let dep_id = 0;
     let crs_id = 0;
 
@@ -606,7 +607,7 @@ app.post('/addClass', upload.none(), async (req, res) => {
     }
 });
 
-//function to show class list
+//Routes to show class list
 app.post('/getClassList',async(req,res)=>{
     const {dep, crs, cls}=req.body;
     let condition=`ins_id=${req.session.inst_id}`;
@@ -622,6 +623,7 @@ app.post('/getClassList',async(req,res)=>{
     {
         condition+=` AND cls_id= ${cls}`;
     }
+    ;
     try {
         connection = await oracledb.getConnection(dbConfig);
 
@@ -643,10 +645,10 @@ app.post('/getClassList',async(req,res)=>{
     }
 })
 
-//function to get class details
+//Routes to get class details
 app.post('/getClassDetails',async(req,res)=>{
     const {idcc_id}=req.body;
-    let connection;
+    ;
     try {
         connection = await oracledb.getConnection(dbConfig);
 
@@ -666,7 +668,7 @@ app.post('/getClassDetails',async(req,res)=>{
     }
 })
 
-//function to show subject list
+//Routes to show subject list
 app.post('/getSubjectList',async(req,res)=>{
     const {idcc_id}=req.body;
     try {
@@ -691,10 +693,10 @@ app.post('/getSubjectList',async(req,res)=>{
     }
 })
 
-//function to add new subject
+//Routes to add new subject
 app.post('/addSubject', upload.none(), async (req, res) => {
     const { idcc_id, subjectName, teacherId } = req.body;
-    let connection;
+    ;
     try {
         connection = await oracledb.getConnection(dbConfig);
 
@@ -717,10 +719,10 @@ app.post('/addSubject', upload.none(), async (req, res) => {
     }
 });
 
-//function to update subject
+//Routes to update subject
 app.post('/updateSubject', upload.none(), async (req, res) => {
     const { subject_id, subjectName, teacherId } = req.body;
-    let connection;
+    ;
     try {
         connection = await oracledb.getConnection(dbConfig);
 
@@ -742,10 +744,10 @@ app.post('/updateSubject', upload.none(), async (req, res) => {
     }
 });
 
-//function to delete subject
+//Routes to delete subject
 app.post('/deleteSubject', async(req, res)=>{
     const{subject_id}=req.body;
-    let connection;
+    ;
     try {
         connection = await oracledb.getConnection(dbConfig);
 
@@ -764,7 +766,7 @@ app.post('/deleteSubject', async(req, res)=>{
     }
 })
 
-//function to show student list
+//Routes to show student list
 app.post('/getStudentList',async(req,res)=>{
     const {dep, crs, cls}=req.body;
     let condition=`ins_id=${req.session.inst_id}`;
@@ -780,6 +782,7 @@ app.post('/getStudentList',async(req,res)=>{
     {
         condition+=` AND cls_id= ${cls}`;
     }
+    ;
     try {
         connection = await oracledb.getConnection(dbConfig);
 
@@ -803,9 +806,9 @@ app.post('/getStudentList',async(req,res)=>{
     }
 })
 
-//function to show teacher list
+//Routes to show teacher list
 app.get('/getTeacherList',async(req,res)=>{
-    let connection;
+    ;
     try {
         connection = await oracledb.getConnection(dbConfig);
 
@@ -825,9 +828,9 @@ app.get('/getTeacherList',async(req,res)=>{
     }
 })
 
-//function to show unverified teacher list
+//Routes to show unverified teacher list
 app.get('/teacherUnverifiedList', async (req, res) => {
-    let connection;
+    ;
     try {
         connection = await oracledb.getConnection(dbConfig);
         const result = await connection.execute(
@@ -884,9 +887,9 @@ app.get('/teacherUnverifiedList', async (req, res) => {
     }
 });
 
-//function to show unverified student list
+//Routes to show unverified student list
 app.get('/studentUnverifiedList', async (req, res) => {
-    let connection;
+    ;
     try {
         connection = await oracledb.getConnection(dbConfig);
         const result = await connection.execute(
@@ -942,10 +945,10 @@ app.get('/studentUnverifiedList', async (req, res) => {
     }
 });
 
-//function to verification of teacher
+//Routes to verification of teacher
 app.post('/teacherVerification', async(req, res)=>{
     const {tch_id, status}=req.body;
-    let connection;
+    ;
     try{
         connection=await oracledb.getConnection(dbConfig);
         if(status=='accept'){
@@ -973,10 +976,10 @@ app.post('/teacherVerification', async(req, res)=>{
     }
 })
 
-//function to verification of student
+//Routes to verification of student
 app.post('/studentVerification', async(req, res)=>{
     const {std_id, status}=req.body;
-    let connection;
+    ;
     try{
         connection=await oracledb.getConnection(dbConfig);
         if(status=='accept'){
@@ -1005,9 +1008,9 @@ app.post('/studentVerification', async(req, res)=>{
 })
 
 //student signup
-//function to fetch institute list
+//Routes to fetch institute list
 app.get('/getInstitute', async (req, res) => {
-    let connection;
+    ;
     try {
         connection = await oracledb.getConnection(dbConfig);
         const result = await connection.execute(
@@ -1027,10 +1030,10 @@ app.get('/getInstitute', async (req, res) => {
     }
 });
 
-//function to fetch department
+//Routes to fetch department
 app.get('/getDepList', async (req, res) => {
     const { instId } = req.query;
-    let connection;
+    ;
     try {
         connection = await oracledb.getConnection(dbConfig);
         const result = await connection.execute(
@@ -1052,10 +1055,10 @@ app.get('/getDepList', async (req, res) => {
     }
 });
 
-//function to fetch class
+//Routes to fetch class
 app.get('/getSections', async (req, res) => {
     const { clsId } = req.query;
-    let connection;
+    ;
     try {
         connection = await oracledb.getConnection(dbConfig);
         const result = await connection.execute(
@@ -1080,7 +1083,7 @@ app.get('/getSections', async (req, res) => {
 //check student email in used or not
 app.post('/checkStdEmailUsed',async(req,res)=>{
     const{stdMail}=req.body;
-    let connection;
+    ;
     try{
         connection=await oracledb.getConnection(dbConfig);
         const result=await connection.execute(`SELECT COUNT(std_id) FROM student WHERE std_email=:email`,{email:stdMail});
@@ -1139,7 +1142,7 @@ app.post('/verifyOTP3',(req,res)=>{
     res.send('false');
 })
 
-//student signup function
+//student signup Routes
 app.post('/studentSignup', upload.fields([{ name: 'photo' }, { name: 'receipt' }]), async (req, res) => {
     const { stdName, stdDob, scholarId, stdMob, stdMail, college, department, course, cls, section, pass } = req.body;
     
@@ -1147,7 +1150,7 @@ app.post('/studentSignup', upload.fields([{ name: 'photo' }, { name: 'receipt' }
     const receipt = req.files?.receipt?.[0]?.buffer;
     const hashPass = await bcrypt.hash(pass, 10);
     const verified=0;
-    let connection;
+    ;
 
     try {
         connection = await oracledb.getConnection(dbConfig);
@@ -1183,13 +1186,13 @@ app.post('/studentSignup', upload.fields([{ name: 'photo' }, { name: 'receipt' }
     }
 });
 
-//function to student login
+//Routes to student login
 app.post('/studentLogin',async (req,res)=>{
     let {stdMail, pass}=req.body;
     if(!stdMail){
         stdMail=req.session.studentMail;
     }
-    let connection;
+    ;
     try{
         connection=await oracledb.getConnection(dbConfig);
         const result=await connection.execute(`SELECT std_pass FROM student WHERE std_email=:stdMail`,{stdMail: stdMail});
@@ -1220,9 +1223,9 @@ app.post('/studentLogin',async (req,res)=>{
     }
 })
 
-//function for student dashboard data fetch
+//Routes for student dashboard data fetch
 app.get('/studentDetailsFetch', async (req, res) => {
-    let connection;
+    ;
     try {
         connection = await oracledb.getConnection(dbConfig);
         const result = await connection.execute(
@@ -1298,7 +1301,7 @@ app.post('/updateStdPassword',async (req,res)=>{
     if(!stdMail){
         stdMail=req.session.studentMail;
     }
-    let connection;
+    ;
     const hashPass = await bcrypt.hash(pass, 10);
     try {
         connection = await oracledb.getConnection(dbConfig);
@@ -1323,11 +1326,11 @@ app.post('/updateStdPassword',async (req,res)=>{
     }
 })
 
-//teacher function
+//teacher Routes
 //check teacher email in used or not
 app.post('/checkTchEmailUsed',async(req,res)=>{
     const{tchMail}=req.body;
-    let connection;
+    ;
     try{
         connection=await oracledb.getConnection(dbConfig);
         const result=await connection.execute(`SELECT COUNT(tch_id) FROM teacher WHERE tch_email=:email`,{email:tchMail});
@@ -1386,13 +1389,13 @@ app.post('/verifyOTP4',(req,res)=>{
     res.send('false');
 })
 
-//teacher signup function
+//teacher signup Routes
 app.post('/teacherSignup',upload.single('photo'), async(req,res)=>{
     const{tchName, tchCode, tchMob, tchMail, college, pass}=req.body;
     const tchPic=req.file?.buffer;
     const hashPass= await bcrypt.hash(pass,10);
     const verified=0;
-    let connection;
+    ;
     try{
         connection=await oracledb.getConnection(dbConfig);
         connection.execute(
@@ -1420,14 +1423,14 @@ app.post('/teacherSignup',upload.single('photo'), async(req,res)=>{
     }
 })
 
-//function to teacher login
+//Routes to teacher login
 app.post('/teacherLogin',async (req,res)=>{
     let {tchMail, pass}=req.body;
     if(!tchMail){
         tchMail=req.session.teacherMail;
     }
     req.session.teacherMail=tchMail;
-    let connection;
+    ;
     try{
         connection=await oracledb.getConnection(dbConfig);
         const result=await connection.execute(`SELECT tch_pass FROM teacher WHERE tch_email=:tchMail`,{tchMail: tchMail});
@@ -1457,9 +1460,9 @@ app.post('/teacherLogin',async (req,res)=>{
     }
 })
 
-//function for teacher dashboard data fetch
+//Routes for teacher dashboard data fetch
 app.get('/teacherDetailsFetch', async (req, res) => {
-    let connection;
+    ;
     try {
         connection = await oracledb.getConnection(dbConfig);
         const result = await connection.execute(
@@ -1530,7 +1533,7 @@ app.post('/updateTchPassword',async (req,res)=>{
     if(!tchMail){
         tchMail=req.session.teacherMail;
     }
-    let connection;
+    ;
     const hashPass = await bcrypt.hash(pass, 10);
     try {
         connection = await oracledb.getConnection(dbConfig);
@@ -1557,7 +1560,7 @@ app.post('/updateTchPassword',async (req,res)=>{
 
 //load subject list in select box
 app.get('/subList',async(req, res)=>{
-    let connection;
+    ;
     try{
         connection=await oracledb.getConnection(dbConfig);
         const result=await connection.execute(`SELECT sub_id, dep_name, crs_name, cls_name, sub_name FROM subject_view WHERE tch_id=:tchId`,{tchId: req.session.teacher_id});
@@ -1579,10 +1582,10 @@ app.get('/subList',async(req, res)=>{
     }
 })
 
-//function to find subject details
+//Routes to find subject details
 app.post('/getSubDetails',async(req,res)=>{
     const {sub_id}=req.body;
-    let connection;
+    ;
     try{
         connection=await oracledb.getConnection(dbConfig);
         const result=await connection.execute(`SELECT dep_name, crs_name, cls_name, sub_name, idcc_id FROM subject_view WHERE sub_id=:subId`,{subId: sub_id});
@@ -1605,9 +1608,9 @@ app.post('/getSubDetails',async(req,res)=>{
     }
 })
 
-//function to load student details for attendance
+//Routes to load student details for attendance
 app.get('/getStudentDetails',async(req,res)=>{
-    let connection;
+    ;
     try{
         connection=await oracledb.getConnection(dbConfig);
         const result=await connection.execute(`SELECT std_id, sch_id, std_name, std_pic FROM student WHERE verified=1 AND idcc_id=:idccId`,{idccId: req.session.idcc_id});
@@ -1664,10 +1667,10 @@ app.get('/getStudentDetails',async(req,res)=>{
     }
 })
 
-//function to get attendance status
+//Routes to get attendance status
 app.post('/getAttendanceStats', async (req, res) => {
     const { std_id, sub_id } = req.body;
-    let connection;
+    ;
 
     try {
         connection = await oracledb.getConnection(dbConfig);
@@ -1711,7 +1714,7 @@ app.post('/getAttendanceStats', async (req, res) => {
 //fucntion to mark attendance
 app.post('/markAttendance', async (req, res) => {
     const { std_id, sub_id, status } = req.body;
-    let connection;
+    ;
 
     try {
         connection = await oracledb.getConnection(dbConfig);
@@ -1741,7 +1744,7 @@ app.post('/markAttendance', async (req, res) => {
 //update status of attendance
 app.post('/updateAttendance', async (req, res) => {
     const { std_id, sub_id, status } = req.body;
-    let connection;
+    ;
     try {
         connection = await oracledb.getConnection(dbConfig);
         
@@ -1772,10 +1775,10 @@ app.post('/updateAttendance', async (req, res) => {
 });
 
 //notes
-//function to load notes
+//Routes to load notes
 app.post('/getNotesList', async (req, res) => {
     const { sub_id } = req.body;
-    let connection;
+    ;
 
     try {
         connection = await oracledb.getConnection(dbConfig);
@@ -1797,13 +1800,13 @@ app.post('/getNotesList', async (req, res) => {
     }
 });
 
-//function to upload notes
+//Routes to upload notes
 app.post('/uploadNotes', upload.single('notesFile'), async (req, res) => {
     const { notesTitle, sub_id } = req.body;
     const notesFile = req.file?.buffer;
     const fileType = req.file?.mimetype;
 
-    let connection;
+    ;
 
     try {
         connection = await oracledb.getConnection(dbConfig);
@@ -1834,7 +1837,7 @@ app.post('/uploadNotes', upload.single('notesFile'), async (req, res) => {
 //download notes
 app.get('/downloadNote/:noteId', async (req, res) => {
     const { noteId } = req.params;
-    let connection;
+    ;
 
     try {
         connection = await oracledb.getConnection(dbConfig);
@@ -1873,7 +1876,7 @@ app.get('/downloadNote/:noteId', async (req, res) => {
 //delete notes
 app.delete('/deleteNote/:noteId', async (req, res) => {
     const { noteId } = req.params;
-    let connection;
+    ;
 
     try {
         connection = await oracledb.getConnection(dbConfig);
@@ -1898,10 +1901,10 @@ app.delete('/deleteNote/:noteId', async (req, res) => {
 });
 
 //assignment
-//function to load assignment
+//Routes to load assignment
 app.post('/getAssignmentList', async (req, res) => {
     const { sub_id } = req.body;
-    let connection;
+    ;
 
     try {
         connection = await oracledb.getConnection(dbConfig);
@@ -1923,13 +1926,13 @@ app.post('/getAssignmentList', async (req, res) => {
     }
 });
 
-//function to upload assignment
+//Routes to upload assignment
 app.post('/uploadAssignment', upload.single('assignmentFile'), async (req, res) => {
     const { assignmentTitle, sub_id } = req.body;
     const assignmentFile = req.file?.buffer;
     const fileType = req.file?.mimetype;
 
-    let connection;
+    ;
 
     try {
         connection = await oracledb.getConnection(dbConfig);
@@ -1960,7 +1963,7 @@ app.post('/uploadAssignment', upload.single('assignmentFile'), async (req, res) 
 //download assignment
 app.get('/downloadAssignment/:assignId', async (req, res) => {
     const { assignId } = req.params;
-    let connection;
+    ;
 
     try {
         connection = await oracledb.getConnection(dbConfig);
@@ -1999,7 +2002,7 @@ app.get('/downloadAssignment/:assignId', async (req, res) => {
 //delete assignment
 app.delete('/deleteAssignment/:assignmentId', async (req, res) => {
     const { assignmentId } = req.params;
-    let connection;
+    ;
 
     try {
         connection = await oracledb.getConnection(dbConfig);
@@ -2023,9 +2026,9 @@ app.delete('/deleteAssignment/:assignmentId', async (req, res) => {
     }
 });
 
-//function to load subject list in student dashboard
+//Routes to load subject list in student dashboard
 app.get('/subList1',async(req, res)=>{
-    let connection;
+    ;
     try{
         connection=await oracledb.getConnection(dbConfig);
         const result=await connection.execute(`SELECT sub_id, sub_name FROM subject WHERE idcc_id=:idccId`,{idccId: req.session.idcc_id1});
@@ -2047,10 +2050,10 @@ app.get('/subList1',async(req, res)=>{
     }
 })
 
-//function to load student attendance sheet and status for student view
+//Routes to load student attendance sheet and status for student view
 app.post('/getAttendanceDetails', async (req, res) => {
     const { sub_id } = req.body;
-    let connection;
+    ;
 
     try {
         connection = await oracledb.getConnection(dbConfig);
@@ -2099,10 +2102,10 @@ app.post('/getAttendanceDetails', async (req, res) => {
 });
 
 //chat
-//function to load chats
+//Routes to load chats
 app.post('/getchats', async (req, res) => {
     const {sub_id}=req.body;
-    let connection;
+    ;
     try {
         connection = await oracledb.getConnection(dbConfig);
         const result = await connection.execute(`
@@ -2122,10 +2125,10 @@ app.post('/getchats', async (req, res) => {
     }
 });
 
-//function to send message
+//Routes to send message
 app.post('/sendMessage', async (req, res) => {
     const {sub_id, message} = req.body;
-    let connection;
+    ;
 
     try {
         connection = await oracledb.getConnection(dbConfig);
@@ -2149,10 +2152,10 @@ app.post('/sendMessage', async (req, res) => {
     }
 });
 
-//function to load chats student
+//Routes to load chats student
 app.post('/getchats1', async (req, res) => {
     const {sub_id}=req.body;
-    let connection;
+    ;
     try {
         connection = await oracledb.getConnection(dbConfig);
         const result = await connection.execute(`
@@ -2172,10 +2175,10 @@ app.post('/getchats1', async (req, res) => {
     }
 });
 
-//function to send message student
+//Routes to send message student
 app.post('/sendMessage1', async (req, res) => {
     const {sub_id, message} = req.body;
-    let connection;
+    ;
 
     try {
         connection = await oracledb.getConnection(dbConfig);
