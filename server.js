@@ -553,7 +553,6 @@ app.get('/getClasses', async (req, res) => {
 app.post('/addClass', upload.none(), async (req, res) => {
     const { department, newDep, course, newCrs, className, sectionNum } = req.body;
     console.log(department, newDep, course, newCrs, className, sectionNum);
-    ;
     let dep_id = 0;
     let crs_id = 0;
 
